@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style type="text/css">
+
+    </style>
+</head>
+<header class="aui-bar aui-bar-nav" style="background-color:#526def">
+    <div class="aui-pull-left aui-btn" onclick="back()">
+        <span class="aui-iconfont aui-icon-left"></span>返回
+    </div>
+    <div class="aui-title">功率预设</div>
+    <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+        <span class="aui-iconfont aui-icon-search"></span>
+    </div> -->
+</header>
+
+<body>
+
+    <ul class="aui-list aui-list-in">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">目标值1:</div>
+              </div>
+              <div style="width:200px">
+                  <input style="width:100px;border:1px solid #ccc" type="number"/>
+                  <span>（瓦）</span>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" checked>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title">动作方式</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">上升越限后动作</div>
+              </div>
+              <input type="checkbox" class="aui-switch" checked>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">下降越限后动作</div>
+              </div>
+              <input type="checkbox" class="aui-switch" checked>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">目标值2:</div>
+              </div>
+              <div style="width:200px">
+                  <input style="width:100px;border:1px solid #ccc"/>
+                  <span>（瓦）</span>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" checked>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title">动作方式</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">上升越限后动作</div>
+              </div>
+              <input type="checkbox" class="aui-switch" checked>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">下降越限后动作</div>
+              </div>
+              <input type="checkbox" class="aui-switch" checked>
+          </div>
+      </li>
+    </ul>
+    <div lass="aui-list-item-inner" style="margin-top:200px;text-align:center">
+      <div class="aui-btn aui-btn-info">保存</div>
+      <div class="aui-btn">取消</div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+var guanli=document.getElementsByClassName("aui-btn-success");
+
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+        api.setStatusBarStyle({
+          style: 'dark',
+          color: '#526def'
+        });
+
+        for(var i=0;i<guanli.length;i++){
+          $api.addEvt(guanli[i], 'click', function(){
+      });
+        }
+
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</html>

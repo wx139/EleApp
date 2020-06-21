@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>修改配电箱</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+
+
+<body>
+    <img src="../../image/bj2.jpg" alt="" id='bg'>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">修改楼层</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+    <ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  楼层名称
+              </div>
+              <div class="aui-list-item-input">
+                  <input type="text" placeholder="请输入楼层名称" id='pdxmc' style="color:white">
+              </div>
+          </div>
+      </li>
+    </ul>
+    <div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
+      <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='edit()'>修改</div>
+      <div class="aui-btn" onclick="deletecell()">删除</div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+
+    var cellinfo;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+
+        if(api.pageParam.cellid){
+          cellinfo=api.pageParam;
+        }
+        else {
+          cellinfo={}
+        }
+
+        pdxmc.value=cellinfo.cellname
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+    function edit(){
+        if(pdxmc.value==''){
+          api.toast({
+              msg: '请输入楼层名称',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else{
+          api.ajax({
+                url: $api.getStorage('url')+'cellsedit/',
+                method: 'post',
+                data: {
+                    values:{
+                      cellid:cellinfo.cellid,
+                      cellname:pdxmc.value,
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                  api.toast({
+                      msg: '修改成功',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                  api.execScript({
+                      name: 'lcgl',
+                      script: 'getData()'
+                  });
+                  setTimeout(back,2000);
+                } else {
+                    console.log(JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+
+    function deletecell(){
+      api.ajax({
+            url: $api.getStorage('url')+'cellsedit/?cellid='+cellinfo.cellid,
+            method: 'get',
+        }, function(ret, err) {
+            if (ret) {
+              console.log(JSON.stringify(ret));
+              var tag=ret.data;
+              if(tag=='1'){
+                api.toast({
+                    msg: '楼层下有分组，不可删除',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+              }
+              else if(tag=='2'){
+                api.toast({
+                    msg: '默认楼层不可删除',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+              }
+              else{
+                api.toast({
+                    msg: '删除成功',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                api.execScript({
+                    name: 'lcgl',
+                    script: 'getData()'
+                });
+                setTimeout(back,2000)
+              }
+            } else {
+              api.toast({
+                  msg: '删除失败',
+                  duration: 2000,
+                  location: 'bottom'
+              });
+              console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+</script>
+
+</html>

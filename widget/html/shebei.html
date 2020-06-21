@@ -1,0 +1,291 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设备</title>
+    <!-- <link rel="stylesheet" type="text/css" href="../css/aui.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--Import Google Icon Font-->
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!--Import materialize.css-->
+     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+     <link rel="stylesheet" type="text/css" href="../css/public.css">
+     <!-- 引入样式和js文件 -->
+     <link rel="stylesheet" type="text/css" href="../css/mobileSelect.css">
+     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+     <style type="text/css">
+     #bg{
+          position: fixed;
+          right: 0px;
+          bottom: 0px;
+          min-width: 100%;
+          min-height: 100%;
+          height: auto;
+          width: auto;
+          z-index: -99999;
+          /*加滤镜*/
+          /*-webkit-filter: grayscale(100%);*/
+          /*filter:grayscale(100%);*/
+      }
+      body{
+        background-color: rgba(0, 0, 0, 0);
+      }
+     </style>
+</head>
+
+<body>
+  <img src="../image/bj2.jpg" alt="" id='bg'>
+  <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-title" id='title'>设备概况</div>
+      <a class="aui-pull-right aui-btn aui-btn-outlined" id="showCell" onclick="showCell()">
+          <span class="aui-iconfont aui-icon-menu"></span>
+      </a>
+      <a class="aui-pull-right aui-btn " id="1" >
+
+      </a>
+  </header>
+  <div class="carousel" style="height:200px;margin-top:80px" id="cellimg">
+   <a class="carousel-item" href="#one!"  v-for="img in imgs">
+     <img :src='img.img'>
+   </a>
+ </div>
+ <div class="row white-text" style="text-align:center;" id='celldata'>
+       <div class="col s6" style="height:100px;line-height:30px">
+          实时负荷
+          <div style='font-size:30px'>{{celldata.tPower}}W</div>
+       </div>
+       <div class="col s6" style="height:100px;line-height:30px">
+          今日电费
+          <div style='font-size:30px'>{{celldata.day_eleFee}}元</div>
+       </div>
+       <div class="col s6" style="height:100px;line-height:30px">
+          本月用电累计
+          <div style='font-size:30px'>{{celldata.month_eleNum}}度</div>
+       </div>
+       <div class="col s6" style="height:100px;line-height:30px">
+          本月电费
+          <div style='font-size:30px'>{{celldata.month_eleFee}}元</div>
+       </div>
+     </div>
+
+    <div id='group'>
+     <div class="col s12 m7"  v-for='item in items' >
+      <div class="card horizontal" style="background-color:rgba(0,0,0,0)" >
+        <div class="card-image" style="height:60px">
+          <img :src="item.img" style="height:60px;width:80px">
+        </div>
+        <div class="card-stacked white-text" style="height:60px;background-color:rgba(0,0,0,0)" v-on:click='shebei(item)'>
+            <span class="card-title center-align" style='font-size:18px;line-height:1.5rem'>{{item.groupname}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id='trigger1' class="hide"></div>
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../script/materialize.min.js"></script>
+<script src="../script/mobileSelect.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+    var celldata={
+      'tPower':0,
+      'day_eleFee':0,
+      'day_eleFee':0,
+      'month_eleNum':0,
+      'month_eleFee':0
+    }
+    var cells_data=[]
+    var imgs=[{"img":$api.getStorage('url')+"media/cells_img/f02dffd23559a2d33a915eb808476d4f.jpg"}] ;
+    var groups=[]
+    var v_celldata;
+    var v_group;
+    var cellimg;
+    var mobileSelect;
+    var tag=true;
+    var timer;
+    apiready=function(){
+      $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
+      $api.fixStatusBar( $api.dom('header') );
+      // url主路径
+      mobileSelect = new MobileSelect({
+         trigger: '#trigger1',
+         title: '楼层选择',
+         wheels: [
+                     {data: ['D','D']}
+                 ],
+         position:[0], //初始化定位 打开时默认选中的哪个 如果不填默认为0
+         transitionEnd:function(indexArr, data){
+
+         },
+         callback:function(indexArr, data){
+
+             changeCell(cellidArr[indexArr])
+         }
+       });
+       v_group = new Vue({
+        el: '#group',
+        data: {
+          items: groups
+        },
+        methods:{
+          shebei:function(item){
+            api.openWin({
+                name: 'sad',
+                url: 'kongzhi/pdx.html',
+                pageParam: {
+                    groupid: item.groupid,
+                    groupname:item.groupname
+                }
+            });
+          }
+        }
+      })
+
+
+       v_celldata=new Vue({
+        el:"#celldata",
+        data:{
+          celldata:celldata
+        }
+      })
+
+       cellimg=new Vue({
+        el:"#cellimg",
+        data:{
+          imgs:imgs
+        }
+      })
+
+
+      cellArr=[]
+      cellidArr=[]
+
+      getData()
+
+
+    }
+    function getData(){
+      api.ajax({
+          url: $api.getStorage('url')+'cells/?id='+$api.getStorage('userid'),
+          method: 'get',
+            }, function(ret, err) {
+                cellArr=[]
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                    for(var i=0;i<ret.length;i++){
+                    cellArr.push(ret[i].cellname)
+                    cellidArr.push(ret[i].id)
+                    img_data={}
+                    img_data.img=$api.getStorage('ur')+ret[i].img;
+                    imgs.push(img_data)
+
+                     cell_data={}
+                     cell_data.cellename=ret[i].cellname;
+                     cell_data.img=ret[i].img;
+                     cell_data.id=ret[i].id
+                      for(var j=0;j<ret[i].groups.length;j++)
+                      {
+                        group=ret[i].groups[j];
+                        group_data={}
+
+                        group_data.groupname=group.groupname;
+                        group_data.groupid=group.id;
+                        group_data.groupimg=group.img;
+                        cell_data.group=group_data
+                      }
+                      cells_data.push(cell_data)
+                    }
+                    cellimg.imgs=imgs
+                    $('.carousel').carousel(
+
+                    );
+                    if(cells_data.length>0){
+                      if(tag==true){
+                        changeCell(cells_data[0].id)
+                        tag=false
+                      }
+                      mobileSelect.updateWheel(0,cellArr)
+                    }
+
+
+                } else {
+                  console.log(JSON.stringify(err));
+                  api.toast({
+                      msg: '网络错误',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+
+                }
+            });
+
+
+    }
+
+     function showCell() {
+         $('#trigger1').click()
+     }
+
+     function changeCell(cellid)
+     {
+       api.ajax({
+           url: $api.getStorage('url')+'getcelldata/?id='+$api.getStorage('userid')+'&cellid='+cellid,
+           method: 'get',
+           data: {}
+       }, function(ret, err) {
+           if (ret) {
+             console.log(JSON.stringify(ret));
+               data=ret
+               celldata=data
+              v_celldata.celldata=celldata
+
+           } else {
+            // console.log(JSON.stringify(err));
+           }
+       });
+       api.ajax({
+           url: $api.getStorage('url')+'cells/?id='+$api.getStorage('userid')+'&cellid='+cellid,
+           method: 'get',
+           data: {}
+       }, function(ret, err) {
+           groups=[]
+           if (ret.length>0) {
+             console.log(JSON.stringify(ret));
+              if(ret[0].groups){
+                 groupsdata=ret[0].groups;
+                 $api.html($api.byId('title'),ret[0].cellname);
+                 if(groupsdata.length>0){
+                   for(var i=0;i<groupsdata.length;i++){
+                     obj={}
+                     obj.groupname=groupsdata[i].groupname;
+                     obj.groupid=groupsdata[i].id;
+                     obj.img=$api.getStorage('ur')+groupsdata[i].img
+                     groups.push(obj)
+                   }
+                 }
+               }
+               v_group.items=groups
+           } else {
+              console.log(JSON.stringify(err));
+           }
+       });
+
+     }
+     //开始监听
+     function startlisten(){
+       timer=  setInterval(getData,5000)
+     }
+
+     //停止监听
+     function stoplisten(){
+       clearInterval(timer)
+     }
+</script>
+
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>更换背景</title>
+    <link rel="stylesheet" type="text/css" href="../../css/materialize.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+
+<body>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">更换背景</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+
+  <div class="row" style="margin-top:70px">
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj2.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6" >
+          <div class="card" >
+            <div class="card-image">
+              <img src="../../image/bj/bj.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj3.jpeg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj4.png" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj5.jpeg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj6.png" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj7.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj8.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj9.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj10.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj11.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj13.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s6">
+          <div class="card">
+            <div class="card-image">
+              <img src="../../image/bj/bj14.jpg" style="height:230px" class='bg_img'>
+            </div>
+            <div class="card-action">
+               <a class='szbj'>设为背景</a>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+</body>
+<script type="text/javascript" src="../../script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../../script/materialize.min.js"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+var clicknum;
+apiready = function() {
+  $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+  $api.fixStatusBar($api.dom('header'));
+  szbjdom=$api.domAll('.szbj');
+  imgall=$api.domAll('.bg_img');
+  for(var i=0;i<szbjdom.length;i++){
+      (function(k){$api.addEvt(szbjdom[k],'click',function(){
+      var dialogBox = api.require('dialogBox');
+      dialogBox.alert({
+          texts: {
+              title: '更换背景',
+              content: '是否确认选择该背景',
+              leftBtnTitle: '取消',
+              rightBtnTitle: '确认'
+          },
+          styles: {
+              bg: '#fff',
+              w: 300,
+              corner:2,
+              title: {
+                  marginT: 20,
+                  iconSize: 40,
+                  titleSize: 16,
+                  titleColor: '#000'
+              },
+              content: {
+                  color: '#000',
+                  size: 14
+              },
+              left: {
+                  marginB: 7,
+                  marginL: 20,
+                  w: 130,
+                  h: 35,
+                  corner: 2,
+                    color:'#1E90FF',
+                  size: 16
+              },
+              right: {
+                  marginB: 7,
+                  marginL: 10,
+                  w: 130,
+                  h: 35,
+                  corner: 2,
+                  color:'#1E90FF',
+                  size: 16
+              }
+          }
+      }, function(ret) {
+          if (ret.eventType == 'left') {
+              var dialogBox = api.require('dialogBox');
+              dialogBox.close({
+                  dialogName: 'alert'
+              });
+          }
+          if (ret.eventType == 'right') {
+              var bg_img=$api.attr(imgall[k],'src')
+              bgname=bg_img.split('/')[4];
+              $api.setStorage('lasttag',0)
+              $api.setStorage('bg','../image/bj/'+bgname);
+              api.openWin({
+                  name: 'index',
+                  url: '../../index.html',
+                  slidBackEnabled:false,
+                  reload:true,
+              });
+              var dialogBox = api.require('dialogBox');
+              dialogBox.close({
+                  dialogName: 'alert'
+              });
+          }
+      });
+    }) ;
+  })(i);
+  }
+
+}
+
+function back() {
+    api.historyBack({
+        frameName: ''
+    }, function(ret, err) {
+        if (!ret.status) {
+            api.closeWin();
+        }
+    });
+}
+</script>
+
+</html>

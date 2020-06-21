@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+<header class="aui-bar aui-bar-nav"  style="background-color:rgba(0,0,0,0);position:fixed">
+    <div class="aui-pull-left aui-btn" onclick="back()">
+        <span class="aui-iconfont aui-icon-left"></span>返回
+    </div>
+    <div class="aui-title">新增空开</div>
+    <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+        <span class="aui-iconfont aui-icon-search"></span>
+    </div> -->
+</header>
+
+<ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+  <li class="aui-list-item">
+      <div class="aui-list-item-inner">
+          <div class="aui-list-item-label" style="color:white">
+              设备号
+          </div>
+          <div class="aui-list-item-input">
+              <input type="text" placeholder="" id='sbwg' style="color:white" v-model='item.equNumber' disabled="true">
+          </div>
+      </div>
+  </li>
+
+  <li class="aui-list-item">
+       <div class="aui-list-item-inner">
+           <div class="aui-list-item-label" style="color:white">
+               设备地址
+           </div>
+           <div class="aui-list-item-input">
+             <select id='dz' style="color:white">
+                 <option >01</option>
+                 <option >02</option>
+                 <option >03</option>
+                 <option >04</option>
+                 <option >05</option>
+                 <option >06</option>
+                 <option >07</option>
+                 <option >08</option>
+                 <option >09</option>
+                 <option >0a</option>
+                 <option >0b</option>
+                 <option >0c</option>
+                 <option >0d</option>
+                 <option >0e</option>
+                 <option >0f</option>
+                 <option >10</option>
+                 <option >1f</option>
+             </select>
+           </div>
+       </div>
+   </li>
+
+   <li class="aui-list-item">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-label" style="color:white">
+                设备昵称
+            </div>
+            <div class="aui-list-item-input">
+                <input type="text" placeholder="请输入设备昵称" id='sbnc' style="color:white" v-model='item.nickname' >
+            </div>
+        </div>
+    </li>
+
+    <li class="aui-list-item">
+         <div class="aui-list-item-inner">
+             <div class="aui-list-item-label" style="color:white">
+                 设备型号
+             </div>
+             <div class="aui-list-item-input">
+                 <input type="text" placeholder="请输入设备型号" id='sbxh' style="color:white" v-model='item.type'>
+             </div>
+         </div>
+     </li>
+
+     <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  所属配电箱
+              </div>
+              <div class="aui-list-item-input">
+                  <select id='groupselect' style="color:white">
+                      <option v-for='group in groups' :value='group.id'>{{group.groupname}}</option>
+                  </select>
+              </div>
+          </div>
+      </li>
+</ul>
+<div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
+  <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='save()'>新增</div>
+  <div class="aui-btn" onclick="back()">返回</div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    item={}
+    var v_equ;
+    var equNumber;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+        if(api.pageParam.equNumber){
+          equNumber=api.pageParam.equNumber;
+          item.equNumber=equNumber
+        }
+        v_equ = new Vue({
+         el: '#app',
+         data: {
+           item: item,
+           groups:[],
+         },
+        })
+          api.ajax({
+                url: $api.getStorage('url')+'groups/?id='+$api.getStorage('userid'),
+                method: 'get',
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                    v_equ.groups=ret
+                } else {
+                    console.log(JSON.stringify(err));
+                }
+            });
+
+
+
+    }
+    function save(){
+        var index=groupselect.selectedIndex ;
+        groupid=groupselect.options[index].value;
+        var indexs=dz.selectedIndex ;
+        dzvalue=dz.options[indexs].value;
+        if(sbnc.value==''){
+          api.toast({
+              msg: '请输入设备昵称',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else if(sbxh.value==''){
+          api.toast({
+              msg: '请输入设备型号',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else{
+          api.ajax({
+                url: $api.getStorage('url')+'equ/',
+                method: 'post',
+                data: {
+                    values:{
+                      equNumber:equNumber,
+                      number:dzvalue,
+                      nickname:sbnc.value,
+                      type:sbxh.value,
+                      groupid:groupid
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                  if(ret.data=='1'){
+                    api.toast({
+                        msg: '请检查设备是否占用',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  }else{
+                    api.toast({
+                        msg: '新增成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    api.execScript({
+                        name: 'sbgl-info',
+                        script: 'getData()'
+                    });
+                    setTimeout(back,2000);
+                  }
+
+                } else {
+                    console.log(JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</html>

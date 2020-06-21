@@ -1,0 +1,350 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <!-- <link rel="stylesheet" type="text/css" href="../css/aui.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <!--Import Google Icon Font-->
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!--Import materialize.css-->
+     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+     <link type="text/css" rel="stylesheet" href="../css/percircle.css"/>
+      <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+     <style type="text/css">
+     #bg{
+          position: fixed;
+          right: 0px;
+          bottom: 0px;
+          min-width: 100%;
+          min-height: 100%;
+          height: auto;
+          width: auto;
+          z-index: -99999;
+          /*加滤镜*/
+          /*-webkit-filter: grayscale(100%);*/
+          /*filter:grayscale(100%);*/
+      }
+     </style>
+</head>
+
+<body>
+  <img src="../image/bj2.jpg" alt="" id='bg'>
+  <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-title" id='title'>设备概况</div>
+      <a class="aui-pull-right aui-btn aui-btn-outlined dropdown-button" id="addkk"  data-activates='dropdown1'>
+          <span class="aui-iconfont aui-icon-search"  ></span>
+      </a>
+      <ul id='dropdown1' class='dropdown-content'>
+        <li><a onclick="scaner()" tapmode="">扫一扫</a></li>
+        <li class="divider"></li>
+        <li><a onclick="addsn()" tapmode="">手动添加</a></li>
+      </ul>
+      <a class="aui-pull-right aui-btn aui-btn-outlined" id="showCell" onclick="showCell()" style="display:none">
+          <span class="aui-iconfont aui-icon-menu"></span>
+      </a>
+      <a class="aui-pull-right aui-btn " id="1" >
+
+      </a>
+  </header>
+    <div id="allmap" style="width: 0;height: 0; display: none;"></div>
+    <!-- <img src="../image/zhuye/znjj.jpg" alt="" width="100%" height="200px"> -->
+    <div style="width:100%;height:250px;position: relative;text-align:center; no-repeat;background-size:100%;margin-top:50px">
+        <div style="color:white;font-size:40px;padding-top:30px;margin-left:auto;margin-right:auto" id="ssd">11℃</div>
+        <div style="color:white;font-size:14px;padding-top:50px;margin-left:20px;" id="address"></div>
+
+        <div style="width:100%;height:70px;position:absolute;bottom:0px">
+            <div style="width:25%;height:100%;float:left;">
+                <img src="../image/zhuye/gaowen.png" alt="" width="35px" height="35px" style="margin-left:auto;margin-right:auto">
+                <div style="text-align:center;color:white;font-size:12px" id="high">12.23</div>
+            </div>
+            <div style="width:25%;height:100%;float:left">
+                <img src="../image/zhuye/diwen.png" alt="" width="35px" height="35px" style="margin-left:auto;margin-right:auto">
+                <div style="text-align:center;color:white;font-size:12px" id="low"> 12.23</div>
+            </div>
+            <div style="width:25%;height:100%;float:left">
+                <img src="../image/zhuye/fengsu.png" alt="" width="35px" height="35px" style="margin-left:auto;margin-right:auto">
+                <div style="text-align:center;color:white;font-size:12px" id="fengxiang"> 12.23</div>
+            </div>
+            <div style="width:25%;height:100%;float:left">
+                <img src="../image/zhuye/pm.png" alt="" width="35px" height="35px" style="margin-left:auto;margin-right:auto">
+                <div style="text-align:center;color:white;font-size:12px;" id="type"> 12.23</div>
+            </div>
+        </div>
+    </div>
+
+    <table class="centered white-text" id='app'>
+        <thead>
+          <tr>
+              <th data-field="id">名称</th>
+              <th data-field="name">单位</th>
+              <th data-field="price">数值</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>当前实时负荷</td>
+            <td>W</td>
+            <td>{{item.tPower}}</td>
+          </tr>
+          <tr>
+            <td>本月总电费</td>
+            <td>¥</td>
+            <td>{{item.month_eleFee}}</td>
+          </tr>
+          <tr>
+            <td>本天用电度数</td>
+            <td>度</td>
+            <td>{{item.day_eleNum}}</td>
+          </tr>
+          <tr>
+            <td>当天电费</td>
+            <td>¥</td>
+            <td>{{item.day_eleFee}}</td>
+          </tr>
+          <tr>
+            <td>本周用电度数</td>
+            <td>度</td>
+            <td>{{item.week_eleNum}}</td>
+          </tr>
+
+          <tr>
+            <td>本周电费</td>
+            <td>¥</td>
+            <td>{{item.week_eleFee}}</td>
+          </tr>
+          <!-- <tr>
+            <td>当前负载率</td>
+            <td></td>
+            <td>低</td>
+          </tr> -->
+          <!-- <tr>
+            <td>节能情况</td>
+            <td></td>
+            <td>良好</td>
+          </tr> -->
+        </tbody>
+      </table>
+
+
+</body>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=gGwQlSIqtQy4wDrCiUH4Tcjj07YgjgjS"></script>
+<script type = "text/javascript" src = "../script/api.js" ></script>
+<script type="text/javascript" src="../script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../script/materialize.min.js"></script>
+
+<script type="text/javascript">
+    var app;
+    var timer;
+    apiready = function() {
+      $api.fixStatusBar( $api.dom('header') );
+      $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
+      app = new Vue({
+      el: '#app',
+        data: {
+          item:{}
+        }
+      })
+      getData()
+
+        //获取用户当前位置
+        function getLocation() {
+            var options = {
+                enableHighAccuracy: true,
+                maximumAge: 1000
+            }
+            if (true) {
+                //浏览器支持geolocation
+                // alert(navigator.geolocation.getCurrentPosition)
+                var bMap = api.require('bMap');
+                bMap.getLocation({
+                    accuracy: '100m',
+                    autoStop: true,
+                    filter: 1
+                }, function(ret, err) {
+                    if (ret.status) {
+                        onSuccess(ret)
+                    } else {
+                      //  alert(err.code);
+                    }
+                });
+
+            } else {
+                //浏览器不支持geolocation
+                alert('您的浏览器不支持地理位置定位');
+            }
+        }
+        //获取位置成功时
+        function onSuccess(position) {
+            //返回用户位置
+            //经度
+            var longitude = position.lon;
+            //纬度
+            var latitude = position.lat;
+            // alert('经度'+longitude+'，纬度'+latitude);
+
+            //根据经纬度获取地理位置，不太准确，获取城市区域还是可以的
+            var point = new BMap.Point(longitude, latitude);
+            var gc = new BMap.Geocoder();
+            gc.getLocation(point, function(rs) {
+                var addComp = rs.addressComponents;
+                api.ajax({
+                    url: 'http://wthrcdn.etouch.cn/weather_mini?city='+addComp.district,
+                    method: 'get',
+                    data: {}
+                }, function(ret, err) {
+                    if (ret) {
+                      // console.log(JSON.stringify(ret));
+                        var data=ret.data.forecast[0];
+                        $api.html($api.byId('ssd'),ret.data.wendu+'℃');
+                        $api.html($api.byId('address'),addComp.district);
+                        $api.html($api.byId('high'),data.high);
+                        $api.html($api.byId('low'),data.low);
+                        $api.html($api.byId('fengxiang'),data.fengxiang);
+                        $api.html($api.byId('type'),data.type);
+
+                    } else {
+                        // console.log(JSON.stringify(err));
+                        console.log('获取天气信息错误');
+                    }
+                });
+            });
+        }
+        //获取位置失败时
+        function onError(error) {
+            alert(error)
+            switch (error.code) {
+                case 1:
+                    alert("位置服务被拒绝");
+                    break;
+                case 2:
+                    alert("暂时获取不到位置信息");
+                    break;
+                case 3:
+                    alert("获取信息超时");
+                    break;
+                case 4:
+                    alert("未知错误");
+                    break;
+            }
+        }
+
+        //出发位置获取方法
+        getLocation();
+
+        //扫描仪监听
+        api.addEventListener({
+            name: 'scaner'
+        }, function(ret, err) {
+          var FNScanner = api.require('FNScanner');
+          FNScanner.openScanner({
+            autorotation: true
+          }, function(ret, err) {
+            if (ret) {
+               if(ret.eventType=='success')
+               {
+                   data=eval('(' + ret.content + ')')
+                   if(data.sn==undefined||data.sn=='')
+                   {
+                     return;
+                   }
+                   sn=data.sn;
+                   type=data.ver;
+                  api.prompt({
+                      title:'请输入空开数目',
+                      text:'0',
+                      type:'number',
+                      buttons: ['确定', '取消']
+                  }, function(ret, err){
+                      if( ret ){
+                        console.log(JSON.stringify(ret));
+                           if(ret.buttonIndex==1){
+                             api.ajax({
+                                 url: $api.getStorage('url')+'equsall/?equNumber='+sn+'&lenth='+ret.text+'&type='+type+'&userid='+$api.getStorage('userid'),
+                                 method: 'get',
+                              }, function(ret, err) {
+                                 if (ret) {
+                                   console.log(JSON.stringify(ret));
+                                     if(ret.type=='ok'){
+                                       api.toast({
+                                           msg: '设备添加成功!',
+                                           duration: 2000,
+                                           location: 'bottom'
+                                       });
+                                     }else{
+                                       api.toast({
+                                           msg: '该设备已被添加过,请更换设备!',
+                                           duration: 2000,
+                                           location: 'bottom'
+                                       });
+
+                                     }
+
+                                 } else {
+                                      console.log( JSON.stringify(err));
+                                 }
+                              });
+
+
+                           }
+                      }else{
+                           console.log( JSON.stringify(err));
+                      }
+                  });
+
+               }
+            } else {
+              console.log( JSON.stringify(err));返回错误信息
+            }
+          });
+        });
+
+    }
+    function getData()
+    {
+      api.ajax({
+          url: $api.getStorage('url')+'getsydata/?id='+$api.getStorage('userid'),
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+            console.log(JSON.stringify(ret));
+              data=ret
+              app.item=data;
+
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+    }
+
+    function startlisten(){
+      timer=setInterval(getData,60000)
+    }
+
+
+    function stoplisten(){
+      clearInterval(timer)
+    }
+
+      //扫描的方法
+    function scaner(){
+      api.sendEvent({
+      name: 'scaner',
+      });
+    }
+
+
+    function addsn(){
+      api.openWin({
+          name: 'xzwg',
+          url: 'shezhi/xzwg.html',
+      });
+    }
+</script>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+<header class="aui-bar aui-bar-nav"  style="background-color:rgba(0,0,0,0);position:fixed">
+    <div class="aui-pull-left aui-btn" onclick="back()">
+        <span class="aui-iconfont aui-icon-left"></span>返回
+    </div>
+    <div class="aui-title">空开信息</div>
+    <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+        <span class="aui-iconfont aui-icon-search"></span>
+    </div> -->
+</header>
+
+<ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+  <li class="aui-list-item">
+      <div class="aui-list-item-inner">
+          <div class="aui-list-item-label" style="color:white">
+              设备号
+          </div>
+          <div class="aui-list-item-input">
+              <input type="text" placeholder="" id='sbwg' style="color:white" v-model='item.equNumber' disabled="true">
+          </div>
+      </div>
+  </li>
+
+  <li class="aui-list-item">
+       <div class="aui-list-item-inner">
+           <div class="aui-list-item-label" style="color:white">
+               设备地址
+           </div>
+           <div class="aui-list-item-input">
+               <input type="text" placeholder="" id='sbdz' style="color:white" v-model='item.number' disabled="true">
+           </div>
+       </div>
+   </li>
+
+   <li class="aui-list-item">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-label" style="color:white">
+                设备昵称
+            </div>
+            <div class="aui-list-item-input">
+                <input type="text" placeholder="请输入设备昵称" id='sbnc' style="color:white" v-model='item.nickname' >
+            </div>
+        </div>
+    </li>
+
+    <li class="aui-list-item">
+         <div class="aui-list-item-inner">
+             <div class="aui-list-item-label" style="color:white">
+                 设备型号
+             </div>
+             <div class="aui-list-item-input">
+                 <input type="text" placeholder="请输入设备型号" id='sbxh' style="color:white" v-model='item.type'>
+             </div>
+         </div>
+     </li>
+
+     <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  所属配电箱
+              </div>
+              <div class="aui-list-item-input">
+                  <select id='groupselect' style="color:white">
+                      <option v-for='group in groups' :value='group.id' v-if='group.groupname==item.group' selected="selected">{{item.group}}</option>
+                      <option v-for='group in groups' :value='group.id' v-if='group.groupname!=item.group'>{{group.groupname}}</option>
+                  </select>
+              </div>
+          </div>
+      </li>
+</ul>
+<div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
+  <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='edit()'>修改</div>
+  <div class="aui-btn" onclick="deletecell()">删除</div>
+</div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    item=[]
+    var v_equ;
+    var equinfo
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+
+        if(api.pageParam.equinfo){
+          equinfo=api.pageParam.equinfo
+        }
+        v_equ = new Vue({
+         el: '#app',
+         data: {
+           item: [],
+           groups:[],
+           groupname:equinfo.groupname
+         },
+        })
+        v_group = new Vue({
+         el: '#group',
+         data: {
+           item: []
+         },
+        })
+        api.ajax({
+              url: $api.getStorage('url')+'equ/'+equinfo.id,
+              method: 'get',
+          }, function(ret, err) {
+              if (ret) {
+                console.log(JSON.stringify(ret));
+                  v_equ.item=ret
+                  // v_shebei.items=ret.equarr
+              } else {
+                console.log(JSON.stringify(err));
+              }
+          });
+
+          api.ajax({
+                url: $api.getStorage('url')+'groups/?id='+$api.getStorage('userid'),
+                method: 'get',
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                    v_equ.groups=ret
+                } else {
+                console.log(JSON.stringify(err));
+                }
+            });
+
+
+
+    }
+    function edit(){
+        var index=groupselect.selectedIndex ;
+        groupid=groupselect.options[index].value;
+        if(sbnc.value==''){
+          api.toast({
+              msg: '请输入设备昵称',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else if(sbxh.value==''){
+          api.toast({
+              msg: '请输入设备型号',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else{
+          api.ajax({
+                url: $api.getStorage('url')+'equ/'+equinfo.id,
+                method: 'put',
+                data: {
+                    values:{
+                      id:equinfo.id,
+                      equNumber:equinfo.equNumber,
+                      number:equinfo.number,
+                      nickname:sbnc.value,
+                      type:sbxh.value,
+                      groupid:groupid
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                  api.toast({
+                      msg: '修改成功',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                  api.execScript({
+                      name: 'sbgl-info',
+                      script: 'getData()'
+                  });
+                  setTimeout(back,2000);
+                } else {
+                    console.log(JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+
+    function deletecell(){
+      console.log($api.getStorage('url')+'equ/'+equinfo.id);
+      api.ajax({
+            url: $api.getStorage('url')+'equ/'+equinfo.id,
+            method: 'DELETE',
+            dataType:'json',
+            returnAll:'true',
+        }, function(ret, err) {
+          console.log(JSON.stringify(ret));
+            if (ret) {
+
+                api.toast({
+                    msg: '删除成功',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                api.execScript({
+                    name: 'sbgl-info',
+                    script: 'getData()'
+                });
+                setTimeout(back,2000)
+
+            } else {
+              api.toast({
+                  msg: '删除失败',
+                  duration: 2000,
+                  location: 'bottom'
+              });
+              api.toast({
+                  msg: '删除成功',
+                  duration: 2000,
+                  location: 'bottom'
+              });
+              api.execScript({
+                  name: 'sbgl-info',
+                  script: 'getData()'
+              });
+              setTimeout(back,2000)
+            }
+        });
+    }
+
+
+
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</html>

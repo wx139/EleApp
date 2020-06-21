@@ -1,0 +1,675 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+    </style>
+</head>
+
+<body>
+
+  <img src="../image/bj2.jpg" alt="" id='bg'>
+        <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+        <div id="main1" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main2" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main3" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main4" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main5" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main6" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main7" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div id="main8" style="width: 100%;height:300px;margin-top:50px;"></div>
+        <div class="row white-text" style="text-align:center;" id='fenxi'>
+              <div class="col s6" style="height:100px;line-height:30px">
+                 上月总电量
+                 <div style='font-size:30px'>{{lastm_eleNum}}度</div>
+              </div>
+              <div class="col s6" style="height:100px;line-height:30px">
+                 上月总花费
+                 <div style='font-size:30px'>{{lastm_eleFee}}元</div>
+              </div>
+              <div class="col s6" style="height:100px;line-height:30px">
+                 历时平均月电费
+                 <div style='font-size:30px'>{{avgm_eleFee}}元</div>
+              </div>
+              <div class="col s6" style="height:100px;line-height:30px">
+                 上月节省电费约
+                 <div style='font-size:30px'>{{last_saveFee}}元</div>
+              </div>
+            </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/echarts.min.js"></script>
+<script type="text/javascript" src="../script/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="../script/materialize.min.js"></script>
+<script type="text/javascript" src="../script/macarons.js"></script>
+<script type="text/javascript" src="../script/dark.js"></script>
+
+<script type="text/javascript">
+    // 定义图表显示元素
+    var myChart1 = echarts.init(document.getElementById('main1'),'dark');
+    var myChart2 = echarts.init(document.getElementById('main2'),'dark');
+    var myChart3 = echarts.init(document.getElementById('main3'),'dark');
+    var myChart4 = echarts.init(document.getElementById('main4'),'dark');
+    var myChart5 = echarts.init(document.getElementById('main5'),'dark');
+    var myChart6 = echarts.init(document.getElementById('main6'),'dark');
+    // var myChart7 = echarts.init(document.getElementById('main7'),'dark');
+    // var myChart8 = echarts.init(document.getElementById('main8'),'dark');
+    var toldata={}
+    var data1=[];
+    var timer;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
+        gettoldata()
+
+
+        // 基于准备好的dom，初始化echarts实例
+        hideMain();
+        //  initmain1();
+        initmain1();
+        getdata1()
+
+
+
+        // 定义导航区域
+        var NVNavigationBar = api.require('NVNavigationBar');
+        NVNavigationBar.open({
+            rect: {
+                x: 0,
+                y: 30,
+                w: api.frameWidth,
+                h: 42
+            },
+            styles: {
+                orientation: 'horizontal',
+                bg: 'rgba(0,0,0,0)',
+                bgAlpha: 1,
+                font: {
+                    size: 14,
+                    sizeSelected: 18,
+                    color: '#acaaaa',
+                    colorSelected: '#fff',
+                    alpha: 1
+                },
+                itemSize: {
+                    w: 180,
+                    h: 44
+                }
+            },
+            items: [{
+                title: '24小时电量统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected: 'rgba(0,0,0,0)',
+            }, {
+                title: '本月电量统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected: 'rgba(0,0,0,0)',
+            }, {
+                title: '本年电量统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected:'rgba(0,0,0,0)',
+            },{
+                title: '24小时电费统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected: 'rgba(0,0,0,0)',
+            }, {
+                title: '本月电费统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected: 'rgba(0,0,0,0)',
+            }, {
+                title: '本年电费统计',
+                bg: 'rgba(0,0,0,0)',
+                bgSelected:'rgba(0,0,0,0)',
+            }],
+            selectedIndex: 0,
+            fixedOn: api.frameName,
+            id: 'first'
+        }, function(ret, err) {
+            if(ret.eventType="click")
+            {
+              if(ret.index==0){
+                hideMain();
+                initmain1();
+                getdata1()
+              }
+              else if(ret.index==1){
+                hideMain();
+                initmain2();
+                getdata2()
+              }
+              else if(ret.index==2){
+                hideMain();
+                initmain3();
+                  getdata3()
+              }
+              else if(ret.index==3){
+                hideMain();
+                initmain4();
+                  getdata4()
+              }
+              else if(ret.index==4){
+                hideMain();
+                initmain5();
+                  getdata5()
+              }
+              else if(ret.index==5){
+                hideMain();
+                initmain6();
+                  getdata6()
+              }
+              // else if(ret.index==6){
+              //   hideMain();
+              //   initmain7();
+              //     getdata7()
+              // }
+              // else if(ret.index==7){
+              //   hideMain();
+              //   initmain8();
+              //     getdata8()
+              // }
+            }
+        });
+    }
+    // 24小时数据
+    function initmain1() {
+        var    option1 =  {
+          color: ['#3398DB'],
+          tooltip : {
+              trigger: 'axis',
+              axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                  type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+              }
+          },
+          backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+          xAxis: {
+              type: 'category',
+              boundaryGap: false,
+          },
+          yAxis: {
+              type: 'value',
+              name : '用电度数(度)',
+          },
+          series: [{
+              type: 'line',
+              areaStyle: {}
+          }]
+      };;
+      myChart1.setOption(option1);
+      document.getElementById("main1").style.display = "block";
+
+    }
+
+    // 1个月数据
+    function initmain2() {
+        var  option2 = {
+            color: ['#b34038'],
+            backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            xAxis: {
+                type: 'category',
+            },
+            yAxis: {
+                type: 'value',
+                name:'用电度数(度)'
+            },
+            series: [{
+                name:'用电度数',
+                type: 'bar'
+            }]
+        };
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart2.setOption(option2);
+      document.getElementById('main2').style.display = "block";
+    }
+
+    // 一年数据
+    function initmain3() {
+        var  option3 = {
+      color: ['#53b3c3'],
+      backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+      tooltip : {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+      },
+      grid: {
+          left: '6%',
+          right: '9%',
+          bottom: '3%',
+          containLabel: true
+      },
+      xAxis : [
+          {
+              type : 'category',
+              axisTick: {
+                  alignWithLabel: true
+              }
+          }
+      ],
+      yAxis : [
+          {
+              type : 'value',
+              name:'用电度数(度)'
+          }
+      ],
+      series : [
+          {
+              name:'用电度数',
+              type:'bar',
+              barWidth: '20%',
+          }
+      ]
+      }
+      myChart3.setOption(option3);
+      document.getElementById('main3').style.display = "block";
+
+    }
+
+    // 本月数据分析，最大需量
+    function initmain4() {
+
+        var  option4 = {
+
+      backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            }
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            show: true,
+
+        },
+        xAxis:  {
+            type: 'category',
+            boundaryGap: false,
+        },
+        yAxis: {
+            name:'电费(元)',
+            type: 'value',
+            axisLabel: {
+                formatter: '{value}'
+            },
+            axisPointer: {
+                snap: true
+            }
+        },
+        visualMap: {
+            show: false,
+            dimension: 0,
+            pieces: [{
+                lte: 6,
+                color: 'green'
+            }, {
+                gt: 6,
+                lte: 8,
+                color: 'red'
+            }, {
+                gt: 8,
+                lte: 14,
+                color: 'green'
+            }, {
+                gt: 14,
+                lte: 17,
+                color: 'red'
+            }, {
+                gt: 17,
+                color: 'green'
+            }]
+        },
+        series: [
+            {
+                name:'电费',
+                type:'line',
+                smooth: true,
+            }
+        ]
+    };
+        myChart4.setOption(option4);
+        document.getElementById('main4').style.display = "block";
+    }
+    //
+
+    function initmain5() {
+
+        var option5  = {
+          backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+          tooltip: {
+              trigger: 'axis'
+          },
+          legend: {
+              data:['Step Start', 'Step Middle', 'Step End']
+          },
+          grid: {
+              left: '3%',
+              right: '4%',
+              bottom: '3%',
+              containLabel: true
+          },
+          toolbox: {
+
+          },
+          xAxis: {
+              type: 'category',
+          },
+          yAxis: {
+              type: 'value'
+          },
+          series: [
+              {
+                  name:'电费',
+                  type:'line',
+                  step: 'start',
+              }
+          ]
+        };
+
+        myChart5.setOption(option5);
+        document.getElementById('main5').style.display = "block";
+
+    }
+    //
+    //
+    // 近七日内数据日电量
+    function initmain6(){
+    var   option6 = {
+      color: ['#53b3c3'],
+      backgroundColor:'rgba(0, 0, 0, 0)' ,//rgba设置透明度0.1
+      tooltip : {
+          trigger: 'axis',
+          axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+              type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+          }
+      },
+      grid: {
+          left: '6%',
+          right: '9%',
+          bottom: '3%',
+          containLabel: true
+      },
+      xAxis : [
+          {
+              type : 'category',
+              axisTick: {
+                  alignWithLabel: true
+              }
+          }
+      ],
+      yAxis : [
+          {
+              type : 'value',
+              name:'电费(元)'
+          }
+      ],
+      series : [
+          {
+              name:'电费',
+              type:'bar',
+              barWidth: '20%',
+          }
+      ]
+      }
+     myChart6.setOption(option6);
+     document.getElementById('main6').style.display = "block";
+    }
+
+
+    // 隐藏图标显示
+    function hideMain() {
+        document.getElementById('main1').style.display = "none";
+        document.getElementById('main2').style.display = "none";
+        document.getElementById('main3').style.display = "none";
+        document.getElementById('main4').style.display = "none";
+        document.getElementById('main5').style.display = "none";
+        document.getElementById('main6').style.display = "none";
+        // document.getElementById('main7').style.display = "none";
+        // document.getElementById('main8').style.display = "none";
+    }
+    function gettoldata(){
+      api.ajax({
+        url: $api.getStorage('url')+'lastmdata/?id='+$api.getStorage('userid'),
+        method: 'get',
+          }, function(ret, err) {
+              if (ret) {
+                  toldata.lastm_eleNum=ret.lastm_eleNum;
+                  toldata.lastm_eleFee=ret.lastm_eleFee;
+                  toldata.avgm_eleFee=ret.avgm_eleFee;
+                  toldata.last_saveFee=ret.last_saveFee;
+                  obj1={}
+                  obj2={}
+
+                  // console.log(JSON.stringify(toldata));
+                  v_fenxi = new Vue({
+                   el: '#fenxi',
+                   data: toldata,
+                 })
+              } else {
+                  // api.alert({ msg: JSON.stringify(err) });
+              }
+          });
+        }
+        //开始监听
+        function startlisten(){
+          timer=setInterval(gettoldata, 10000);
+        }
+
+        //停止监听
+        function stoplisten(){
+          clearInterval(timer)
+        }
+
+        //获取24小时数据
+        function getdata1(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_24/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleNum'])
+                      }
+                      myChart1.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+
+
+        // 获取碳排放数据
+        function getdata2(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_month/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleNum'])
+                      }
+                      myChart2.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+
+
+        function getdata3(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_year/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleNum'])
+                      }
+                      myChart3.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+        function getdata4(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_24/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleFee'])
+                      }
+                      myChart4.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+        function getdata5(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_month/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleFee'])
+                      }
+                      myChart5.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+        function getdata6(){
+          api.ajax({
+            url: $api.getStorage('url')+'getall_year/?id='+$api.getStorage('userid'),
+            method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      data1=[]
+                      data2=[]
+                      console.log(JSON.stringify(ret[0]));
+                      for(var i=0;i<ret.length;i++){
+                        data1.push(ret[i]['time'])
+                        data2.push(ret[i]['eleFee'])
+                      }
+                      myChart6.setOption({
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data1
+                        },
+                         series: [{
+                              data:data2,
+                         }]
+                     });
+                  } else {
+                      api.alert({ msg: JSON.stringify(err) });
+                  }
+              });
+        }
+
+
+
+</script>
+
+</html>

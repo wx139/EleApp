@@ -1,0 +1,230 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设置</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .text-white {
+            color: #ffffff !important;
+        }
+
+        .aui-grid [class*=aui-col-] {
+            padding: 0.75rem 0;
+        }
+        #bg{
+             position: fixed;
+             right: 0px;
+             bottom: 0px;
+             min-width: 100%;
+             min-height: 100%;
+             height: auto;
+             width: auto;
+             z-index: -99999;
+             /*加滤镜*/
+             /*-webkit-filter: grayscale(100%);*/
+             /*filter:grayscale(100%);*/
+         }
+         ._white{
+           color:white!important;
+         }
+        </style>
+    </style>
+</head>
+
+<body >
+    <!-- 顶部 -->
+    <img src="../image/bj2.jpg" alt="" id='bg'>
+    <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+        <div class="aui-title" id='title'>设置</div>
+    </header>
+    <section class="aui-content" id="user-info" style="margin-top:80px">
+        <div class="aui-list aui-media-list aui-list-noborder aui-bg-info" style="background-color:rgba(0,0,0,0)!important">
+            <div class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner " id='userinfo' onclick="openWinHtml('userinfo','userinfo')">
+                    <div class="aui-list-item-media" style="width:3rem;">
+                        <img src="../image/demo1.png" class="aui-img-round">
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-text text-white aui-font-size-18">{{items[0].userName}}</div>
+                        <div class="aui-list-item-text text-white">
+                            <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{items[0].phoneNumber}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="aui-content">
+        <ul class="aui-list aui-list-in aui-margin-b-15" style="background-color:rgba(0,0,0,0)">
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-location aui-text-wanring"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('sbgl','sbgl')" tapmode="">
+                    <div class="aui-list-item-title _white" >设备管理</div>
+                </div>
+            </li>
+            <li class="aui-list-item ">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-like aui-text-success"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('zgl','zgl')" tapmode="">
+                    <div class="aui-list-item-title _white" >配电箱组管理</div>
+                </div>
+            </li>
+            <li class="aui-list-item ">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-home aui-text-info"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('lcgl','lcgl')" tapmode="">
+                  <div class="aui-list-item-title _white" >楼层管理</div>
+                </div>
+            </li>
+            <li class="aui-list-item ">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-home aui-text-info"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('gjgl','gjgl')" tapmode="">
+                  <div class="aui-list-item-title _white" >告警管理</div>
+                </div>
+            </li>
+            <li class="aui-list-item ">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-gear aui-text-info"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('tysz','tysz')" tapmode="">
+                    <div class="aui-list-item-title _white">通用设置</div>
+                </div>
+            </li>
+            <li class="aui-list-item ">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-mobile aui-text-success"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="esptouch()" tapmode="">
+                    <div class="aui-list-item-title _white">无线配网</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-back aui-text-danger"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="logout()" tapmode="">
+                    <div class="aui-list-item-title _white">退出登录</div>
+                </div>
+            </li>
+
+        </ul>
+
+    </section>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var userinfo={}
+    var app;
+    var timer;
+    var uzmoduledemo = null;
+    apiready = function() {
+        uzmoduledemo = api.require('moduleDemo');
+        $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
+        $api.fixStatusBar( $api.dom('header') );
+        api.addEventListener({
+            name:'viewappear'
+        }, function(ret, err){
+           startlisten()
+        });
+
+
+        api.addEventListener({
+            name:'viewdisappear'
+        }, function(ret, err){
+           stoplisten()
+        });
+         app = new Vue({
+          el: '#userinfo',
+          data: {
+            items: [{}]
+          }
+        })
+        getData()
+
+    }
+
+    function getData(){
+      api.ajax({
+      url: $api.getStorage('url')+'user/'+$api.getStorage('userid'),
+            method: 'get',
+        }, function(ret, err) {
+            var obj={}
+            if (ret) {
+              obj.phoneNumber=ret.phoneNumber;
+              obj.userName=ret.userName;
+              console.log(JSON.stringify(ret));
+              Vue.set(app.items,0,obj)
+            } else {
+              console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+
+    function openWinHtml(name,path) {
+      if(name=='tour'){
+        api.openWin({
+            name: path,
+            url: './shezhi/tohtml.html',
+            pageParam: {
+                name: path
+            }
+        });
+      }else{
+        api.openWin({
+            name: name,
+            url: './shezhi/'+path+'.html',
+            pageParam: {
+                name: name
+            }
+        });
+      }
+
+    }
+
+    function esptouch(){
+      if(api.systemType=='ios'){
+        uzmoduledemo.loginMethod()
+      }
+      else if(api.systemType=='android'){
+          uzmoduledemo.startActivity();
+      }
+    }
+
+    //开始监听
+    function startlisten(){
+      timer=setInterval(getData,6000)
+    }
+
+    //停止监听
+    function stoplisten(){
+      clearInterval(timer)
+    }
+
+
+    function logout(){
+      $api.setStorage('userid', '');
+      api.openWin({
+          name: 'loginout',
+          url: 'log/login.html',
+          historyGestureEnabled:false,
+          slidBackEnabled : false
+      });
+
+    }
+</script>
+
+</html>

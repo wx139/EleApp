@@ -1,0 +1,119 @@
+  <!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>智能空开</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="allmap" style="width: 0;height: 0; display: none;"></div>
+    <!-- <img src="../image/zhuye/znjj.jpg" alt="" width="100%" height="200px"> -->
+    <div style="width:100%;height:200px;background:url('../image/zhuye/znjj.jpg') no-repeat;background-size:100% 200px;position: relative;">
+        <div style="color:white;font-size:26px;padding-top:50px;margin-left:20px" id="address"></div>
+        <div style="width:100%;height:70px;position:absolute;bottom:0px">
+        </div>
+    </div>
+
+    <ul class="aui-list aui-media-list" id='app'>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:  2.5rem;">
+                    <img src="../image/zhuye/fuhe.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">当前实时负荷(KW)</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{curload}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width: 2.5rem;">
+                    <img src="../image/zhuye/yuedian.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">电压(V):</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{mouthfee}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:  2.5rem;">
+                    <img src="../image/zhuye/tiandu.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">电流(A):</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{daydegree}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:  2.5rem;">
+                    <img src="../image/zhuye/tianfei.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">功率(W):</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{dayfee}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:  2.5rem;">
+                    <img src="../image/zhuye/yuedu.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">频率(Hz):</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{weekdegree}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media" style="width:  2.5rem;">
+                    <img src="../image/zhuye/yuefei.png" class="aui-img-round aui-list-img-sm">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title aui-font-size-16">电量(度)</div>
+                        <div class="aui-list-item-right aui-font-size-20">{{weekfee}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</body>
+</script>
+<script type = "text/javascript" src = "../script/api.js" >
+</script>
+<script type="text/javascript">
+    apiready = function() {
+      // $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+      var app = new Vue({
+      el: '#app',
+        data: []
+      })
+    }
+</script>
+
+</html>

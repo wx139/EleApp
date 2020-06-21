@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注册</title>
+    <!-- <link rel="stylesheet" type="text/css" href="../css/aui.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+     <!--Import materialize.css-->
+     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+     <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+     <link type="text/css" rel="stylesheet" href="../../css/materialize.min.css"  media="screen,projection"/>
+     <style type="text/css">
+     #bg{
+          position: fixed;
+          right: 0px;
+          bottom: 0px;
+          min-width: 100%;
+          min-height: 100%;
+          height: auto;
+          width: auto;
+          z-index: -99999;
+          /*加滤镜*/
+          /*-webkit-filter: grayscale(100%);*/
+          /*filter:grayscale(100%);*/
+      }
+      .centerset{
+      float:none !important;
+      margin: auto!important;
+      }
+     </style>
+</head>
+
+<body style="background-color: rgba(0,0,0,0);">
+
+    <img src="../../image/log.jpeg" alt="" id='bg'>
+
+<div class="container" id='app'>
+  <div class="row" style="margin-top:100px">
+    <div class="col s5 centerset">
+      <img src="../../icon/icon150.png" alt="" width="70%" class="centerset">
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px">
+   <form class="col s12">
+     <div class="row">
+       <div class="input-field col s10 centerset" >
+         <input id="first_name" type="text" class="validate" v-model='sjhm'>
+         <label for="first_name" style="color:#5a4343">手机号码</label>
+       </div>
+     </div>
+     <div class="row">
+       <div class="input-field col s10 centerset">
+         <input id="password" type="password" class="validate" v-model='mima'>
+         <label for="password" style="color:#5a4343">密码</label>
+       </div>
+     </div>
+   </form>
+ </div>
+ <div class="row">
+   <div class="col s8 centerset">
+     <a class="waves-effect waves-light btn-large" style="display:block" @click='denglu' tapmode=''>登录</a>
+     <a class="waves-effect waves-light btn-smart" style="display:block;margin-top:20px;text-align:center" @click='zhuce'  tapmode=''>注册</a>
+
+   </div>
+ </div>
+
+</div>
+
+
+<div>
+
+</div>
+</body>
+<script type = "text/javascript" src = "../../script/api.js" ></script>
+<script type = "text/javascript" src = "../../script/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../../script/materialize.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      api.addEventListener({
+          name: 'keyback'
+      }, function(ret, err) {
+          return false
+      });
+      if ($api.getStorage('userid')!=''&&$api.getStorage('userid')!=undefined) {
+        api.openWin({
+            name: 'index',
+            url: '../../index.html',
+            slidBackEnabled:false,
+        });
+      }
+      var vm = new Vue({
+          el: '#app',
+          data: {
+            sjhm:'',
+            code:'',
+            mima:'',
+          },
+          // 在 `methods` 对象中定义方法
+          methods: {
+            denglu:function(event){
+              if(this.sjhm==''){
+                api.toast({
+                    msg: '请输入手机号码',
+                    duration: 2000,
+                    location: 'middle'
+                });
+                return 0;
+              }
+              if(this.mima==''){
+                api.toast({
+                    msg: '请输入密码！',
+                    duration: 2000,
+                    location: 'middle'
+                });
+                return 0;
+              }
+              api.ajax({
+                  url: $api.getStorage('url')+'login/',
+                  method: 'post',
+                  data: {
+                      values: {
+                          phoneNumber: vm.sjhm,
+                          passWord:vm.mima
+                      }
+                  }
+              }, function(ret, err) {
+                  if (ret) {
+                      console.log(JSON.stringify(ret));
+                      api.toast({
+                          msg: '登录成功',
+                          duration: 2000,
+                          location: 'middle'
+                      });
+                      vm.sjhm=''
+                      vm.mima=''
+                      setTimeout(getindex(ret[0].id,2000))
+                  } else {
+                       console.log(JSON.stringify(err));
+                      api.toast({
+                          msg: '登录失败，请检查输入信息！',
+                          duration: 2000,
+                          location: 'middle'
+                      });
+
+                  }
+              });
+            },
+            zhuce:function(){
+              api.openWin({
+                  name: 'zhuce',
+                  url: 'register.html',
+                  slidBackEnabled:false,
+              });
+            }
+          }
+        })
+
+
+      }
+
+
+      function getindex(id){
+        $api.setStorage('userid',id)
+        api.openWin({
+            name: 'index',
+            url: '../../index.html',
+            slidBackEnabled:false,
+        });
+      }
+</script>
+
+</html>

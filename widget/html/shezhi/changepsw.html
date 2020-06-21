@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>修改密码</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+
+
+<body>
+    <img src="../../image/bj2.jpg" alt="" id='bg'>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">个人中心</div>
+      <div class="aui-pull-right aui-btn">
+          <span class="aui-iconfont aui-icon-lock"></span>
+      </div>
+  </header>
+    <ul class="aui-list aui-list-in" id='userinfo' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  原密码
+              </div>
+              <div class="aui-list-item-input">
+                  <input type="password" placeholder="" id='ymm' style="color:white" >
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  新密码
+              </div>
+              <div class="aui-list-item-input">
+                  <input type="password" placeholder="" id='xmm' style="color:white" >
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div class="aui-list-item-label" style="color:white">
+                  确认密码
+              </div>
+              <div class="aui-list-item-input">
+                  <input type="password" placeholder="" id='qrmm' style="color:white">
+              </div>
+          </div>
+      </li>
+
+    </ul>
+    <div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
+      <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='edit()'>修改</div>
+      <div class="aui-btn" onclick="back()">返回</div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var app;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+          app = new Vue({
+          el: '#userinfo',
+          data: {
+            items: {}
+          }
+        })
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: 'userinfo'
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+    function edit(){
+        if(ymm.value==''){
+          api.toast({
+              msg: '请输入原密码',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else if(xmm.value==''){
+          api.toast({
+              msg: '请输入新密码',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else if(qrmm.value==''){
+          api.toast({
+              msg: '请输入确认密码',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else if(qrmm.value!=xmm.value){
+          api.toast({
+              msg: '两次密码输入不一致',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
+        else{
+          console.log(xmm.value);
+          api.ajax({
+                url: $api.getStorage('url')+'pswchange/',
+                method: 'post',
+                data: {
+                    values:{
+                      oldpsw:ymm.value,
+                      newpsw:qrmm.value,
+                      userid:$api.getStorage('userid')
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
+                  if(ret.data=='0'){
+                    api.toast({
+                        msg: '修改成功,请重新登陆',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    api.execScript({
+                        name: 'userinfo',
+                        script: 'getData()'
+                    });
+                    setTimeout(reload,2000);
+                  }else if(ret.data=='1'){
+                    api.toast({
+                        msg: '修改失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  }else if(ret.data=='2')
+                  {
+                    api.toast({
+                        msg: '原密码错误',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  }
+                  }
+                 else {
+                  console.log(JSON.stringify(err));
+                }
+            });
+        }
+    }
+
+
+    function reload(){
+      $api.setStorage('userid', '');
+      api.openWin({
+          name: 'loginout',
+          url: '../log/login.html',
+          historyGestureEnabled:false,
+          slidBackEnabled : false
+      });
+
+    }
+
+</script>
+
+</html>

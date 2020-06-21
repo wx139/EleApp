@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设备管控</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+
+</head>
+
+
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+      <header class="aui-bar aui-bar-nav"  style="background-color:rgba(0,0,0,0);position:fixed">
+          <div class="aui-pull-left aui-btn" onclick="back()">
+              <span class="aui-iconfont aui-icon-left"></span>返回
+          </div>
+          <div class="aui-title" id='groupname'></div>
+          <!-- <div class="aui-pull-right aui-btn ">
+              <span class="aui-iconfont aui-icon-more"></span>
+          </div> -->
+      </header>
+      <div style="width:100%;height:200px;background:url('../../image/zhuye/znjj.jpg') no-repeat;background-size:100% 200px;position: relative;margin-top:80px">
+
+    </div>
+    <ul class="aui-list aui-list-in" id='group' style="background-color:rgba(0,0,0,0)">
+        <li class="aui-list-item" v-for='item in items' >
+            <div class="aui-list-item-label-icon">
+                <div v-if='item.online' style="width:20px">
+                  <i style="color:green" v-if='item.state'>ON</i>
+                  <i style="color:red" v-else>OFF</i>
+                </div>
+                <div style="width:20px" v-else>
+                  <i style="color:red">离线</i>
+                </div>
+            </div>
+            <div class="aui-list-item-inner">
+                <div style="width:100px">
+                    <div class="aui-list-item-title" @click='equinfo(item)'>{{item.name}}</div>
+                </div>
+                <p>
+                    <div class="aui-btn aui-btn-primary" @click='guanli(item)'>管理入口</div>
+                </p>
+
+                <div class="aui-list-item-right">
+                    <div class="aui-btn aui-btn-success" @click='hezha(item)' >合闸</div>
+                    <div class="aui-btn aui-btn-danger" @click='fenzha(item)' >分闸</div>
+                    <!-- <div class="aui-btn aui-btn-padded"  v-if='!item.online' disabled='true'>合闸</div>
+                    <div class="aui-btn aui-btn-padded"  v-if='!item.online' disabled='true'>分闸</div> -->
+                </div>
+            </div>
+        </li>
+    </ul>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var groupid='';
+    var groupname=''
+    var group;
+    var items=[];
+    var timer;
+    var tag=true;
+    var kgstate;
+    var dotag=0;
+    apiready = function() {
+      $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+      api.addEventListener({
+          name:'viewappear'
+      }, function(ret, err){
+         startlisten()
+      });
+
+
+      api.addEventListener({
+          name:'viewdisappear'
+      }, function(ret, err){
+         stoplisten()
+      });
+      $api.fixStatusBar($api.dom('header'));
+
+      if(api.pageParam.groupid){
+        groupid=api.pageParam.groupid;
+        groupname=api.pageParam.groupname
+      }
+      else {
+        groupid=-1
+      }
+      document.getElementById('groupname').innerHTML=groupname;
+      var items=[];
+        group = new Vue({
+        el: '#group',
+        data: {
+          items:items
+        },
+        methods:{
+          guanli:function(item){
+            api.openWin({
+                name: 'dskz',
+                url: 'dskz.html',
+                pageParam: {
+                    equNumber:item.equNumber,
+                    number:item.number,
+                    name:item.name,
+                }
+            });
+          },
+          equinfo:function(item){
+            api.openWin({
+                name: 'equinfo',
+                url: 'equinfo.html',
+                pageParam: {
+                    equNumber:item.equNumber,
+                    number:item.number,
+                    name:item.name,
+                }
+            });
+          },
+          hezha:function(item){
+            api.ajax({
+              url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch=open',
+                method: 'get',
+            },
+            function(ret, err) {
+                if (ret) {
+                    console.log(JSON.stringify(ret));
+                    api.toast({
+                        msg: '已发送合闸命令',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  dotag=1
+                  setTimeout(function(){item.state=true},400)
+                  setTimeout(function(){dotag=0},30000)
+                } else {
+                  console.log(JSON.stringify(err));
+                  api.toast({
+                      msg: '合闸命令发送失败',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                }
+            });
+          },
+          fenzha:function(item){
+            api.ajax({
+              url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch=close',
+                method: 'get',
+            },
+            function(ret, err) {
+                if (ret) {
+                    console.log(JSON.stringify(ret));
+                    api.toast({
+                        msg: '已发送分闸命令',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                 dotag=1
+                 setTimeout(function(){item.state=false},400)
+                 setTimeout(function(){dotag=0},30000)
+                } else {
+                  console.log(JSON.stringify(err));
+                  api.toast({
+                      msg: '分闸命令发送失败',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                }
+            });
+          }
+        }
+        })
+        var askurl;
+        getData()
+    }
+    function getData(){
+      if(groupid!=-1){
+      askurl= $api.getStorage('url')+'peidianxiang/?groupid='+groupid
+      }
+      api.ajax({
+          url:askurl ,
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret));
+              if(dotag==1){
+                return
+              }
+              for (var i = 0; i < ret.length; i++) {
+                var obj={}
+                obj.name=ret[i].nickname;
+                obj.equNumber=ret[i].equNumber;
+                obj.number=ret[i].number;
+                obj.state=ret[i].state;
+                obj.online=ret[i].online;
+                // items.push(obj)
+                Vue.set(group.items,i,obj)
+              }
+          } else {
+            console.log(JSON.stringify(err));
+          }
+      });
+    }
+
+
+    //开始监听
+    function startlisten(){
+      timer=setInterval(getData,10000)
+    }
+
+    //停止监听
+    function stoplisten(){
+      clearInterval(timer)
+    }
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>清理内存</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+
+<body>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">缓存清理</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+
+  <div class="row white-text" style="text-align:center; margin-top:80px;color:white" id='nc'>
+        <div class="col s6" style="height:100px;line-height:30px">
+           总内存
+           <div style='font-size:30px'>{{item.total}}G</div>
+        </div>
+        <div class="col s6" style="height:100px;line-height:30px">
+           已用内存
+           <div style='font-size:30px'>{{item.use}}G</div>
+        </div>
+        <div class="col s6" style="height:100px;line-height:30px">
+           剩余内存
+           <div style='font-size:30px'>{{item.free}}G</div>
+        </div>
+        <div class="col s6" style="height:100px;line-height:30px">
+           本地缓存
+           <div style='font-size:30px'>{{item.cache}}M</div>
+        </div>
+      </div>
+  <div lass="aui-list-item-inner" style="margin-top:30px;text-align:center">
+    <p><div class="aui-btn aui-btn-info aui-btn-block aui-btn-sm" onclick="qlnc()">一键清理</div></p>
+  </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+
+<script type="text/javascript">
+    var app;
+    apiready = function() {
+      $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+      $api.fixStatusBar($api.dom('header'));
+      app = new Vue({
+       el: '#nc',
+       data: {
+         item: {}
+       }
+     })
+      getmem()
+    }
+    function getmem() {
+      var data = getData();
+
+      // document.getElementById("main").style.display = "block";
+    }
+
+    function getData(){
+      var totalsize = api.getTotalSpace({
+          sync: true
+      });
+      var freesize = api.getFreeDiskSpace({
+          sync: true
+      });
+      var cacheize = api.getCacheSize({
+          sync: true
+      });
+
+      var obj={}
+      obj.total=(totalsize/(1024*1024*1024)).toFixed(2);
+      obj.free=(freesize/(1024*1024*1024)).toFixed(2);
+      obj.use=(totalsize/(1024*1024*1024)-freesize/(1024*1024*1024)).toFixed(2)
+      obj.cache=(cacheize/(1024*1024)).toFixed(2);
+      app.item=obj
+
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+    function qlnc(){
+      api.clearCache(function() {
+        api.toast({
+            msg: '清除完成'
+        });
+        getData()
+    });
+    }
+</script>
+
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+
+  <header class="aui-bar aui-bar-nav"  style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title" id='equname'></div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+
+    <div style="width:100%;height:200px;background:url('../../image/kk.jpg') no-repeat;background-size:100% 200px;position: relative;margin-top:80px">
+
+    </div>
+    <ul class="aui-list aui-list-in" id='equid' style="background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">产品型号</div>
+            <div class="aui-list-item-right aui-font-size-16" style="max-width: 100%">CCB-102A</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">ID</div>
+            <div class="aui-list-item-right aui-font-size-16">{{item.equNumber}}</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <!-- <div style="width:100px">
+            <div class="aui-list-item-title">状态</div>
+        </div>
+        <div class="aui-list-item-right">
+            <input type="checkbox" class="aui-switch" checked v-on:click='' >
+        </div> -->
+        <div class="aui-list-item-inner">
+            <div style="width:100px">
+                <div class="aui-list-item-title">状态</div>
+            </div>
+            <p>
+                <div class="aui-btn aui-btn-success" v-if="item.online==true">在线</div>
+                <div class="aui-btn aui-btn-success" v-else>离线</div>
+            </p>
+
+            <div class="aui-list-item-right" v-if='item.online==true'>
+                <input type="checkbox" class="aui-switch"  v-on:click='kg(state)' v-model='state.kgstate'>
+            </div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <!-- <div style="width:100px">
+            <div class="aui-list-item-title">状态</div>
+        </div>
+        <div class="aui-list-item-right">
+            <input type="checkbox" class="aui-switch" checked v-on:click='' >
+        </div> -->
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-text">
+                <div class="aui-list-item-title aui-font-size-16">节能投入:</div>
+                <div class="aui-list-item-right aui-font-size-16" style="width:200px">已节约{{item.jnpay}}元</div>
+            </div>
+            <div class="aui-list-item-right">
+                <input type="checkbox" class="aui-switch"  v-on:click='jn(state)' v-model="state.jnstate">
+            </div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">电压（V）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.meaVol}}</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">电流（A）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.meaEle}}</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">有功功率（W）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.tPower}}</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">有功电度量（kWh）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.tEle}}</div>
+        </div>
+      </li>
+      <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">频率（Hz）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.meaHz}}</div>
+        </div>
+      </li>
+      <!-- <li class="aui-list-item" >
+        <div class="aui-list-item-text">
+            <div class="aui-list-item-title aui-font-size-16">漏电流（V）:</div>
+            <div class="aui-list-item-right aui-font-size-20">{{item.pEle}}</div>
+        </div>
+      </li> -->
+    </ul>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var hz=false;
+    var tag=true;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+
+        // url主路径
+        var url=api.loadSecureValue({ sync:true,
+                key:'testurl'
+        });
+        var equNumber='';
+        var number=''
+        var name=''
+        if(api.pageParam.equNumber){
+          equNumber=api.pageParam.equNumber
+          number=api.pageParam.number
+          name=api.pageParam.name
+        }
+        else {
+          equNumber=-1
+          number=-1
+        }
+        document.getElementById('equname').innerHTML=name;
+
+        var item={
+          meaVol:'',
+          equNumber:equNumber,
+          number:number,
+          tPower:'',
+          meaEle:'',
+          meaHz:'',
+          tEle:'',
+          online:'',
+          state:'',
+          jnstate:'',
+          jnpay:'',
+        };
+        var state={
+          kgstate:false,
+          jnstate:true,
+        }
+        var group = new Vue({
+          el: '#equid',
+          data: {
+            item:item,
+            state:state
+          },
+          methods:{
+            kg:function(backstate){
+              var state=''
+              var namestate=''
+              // console.log(JSON.stringify(state));
+              if(backstate.kgstate==false){
+
+                if(api.systemType=='android'){
+                  namestate='合闸'
+                  state='open';
+                }else {
+                  namestate='分闸'
+                  state='close';
+                }
+              }else{
+
+                if(api.systemType=='android'){
+                  namestate='分闸'
+                  state='close';
+                }else {
+                  namestate='合闸'
+                  state='open'
+                }
+              }
+              api.ajax({
+                  url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch='+state,
+                  method: 'get',
+
+              }, function(ret, err) {
+                  if (ret) {
+                    console.log(JSON.stringify(ret));
+                    api.toast({
+                        msg: namestate+'成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  } else {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: namestate+'失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  }
+              });
+            },
+            jn:function(state){
+
+              var jnstate=''
+              var namestate=''
+              // console.log(state.jnstate);
+
+              if(state.jnstate==false){
+                if(api.systemType=='android'){
+                  namestate='开启节能'
+                  jnstate=true;
+                }else {
+                  namestate='关闭节能'
+                  jnstate=false;
+                }
+              }else{
+                if(api.systemType=='android'){
+                  namestate='关闭节能'
+                  jnstate=false;
+                }else {
+                  namestate='开启节能'
+                  jnstate=true;
+                }
+              }
+              api.ajax({
+                  url: $api.getStorage('url')+'jieneng/?equNumber='+item.equNumber+'&number='+item.number+'&jnstate='+jnstate+'&tpower='+item.tPower,
+                  method: 'get',
+
+              }, function(ret, err) {
+                  if (ret) {
+                    console.log(JSON.stringify(ret));
+                    api.toast({
+                        msg: namestate+'成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  } else {
+                    console.log(JSON.stringify(err));
+                    api.toast({
+                        msg: namestate+'失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                  }
+              });
+            },
+          }
+        })
+        getdata()
+
+        function getdata(){
+        api.ajax({
+            url:$api.getStorage('url')+"equstate/?equNumber="+equNumber+"&number="+number,
+            method: 'get',
+        }, function(ret, err) {
+            if (ret) {
+                console.log(JSON.stringify(ret));
+                group.item.tPower=ret.tpower;
+                group.item.meaVol=ret.vol;
+                group.item.meaEle=ret.ele;
+                group.item.meaHz=ret.meaHz;
+                group.item.tEle=ret.tEle;
+                group.item.online=ret.online;
+                if(tag==true){
+                  group.state.jnstate=!ret.jnstate;
+                  if(ret.state=='1'){
+                    group.state.kgstate=true;
+                  }else{
+                    group.state.kgstate=false;
+                  }
+                  tag=false;
+                }
+                group.item.jnpay=ret.jnpay;
+                // Vue.set(group.item,0,item.meaEle)
+            } else {
+                console.log(JSON.stringify(err));
+                api.toast({
+                    msg: '获取数据失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            }
+        });
+      }
+      setInterval(getdata, 8000);
+    }
+
+    function back() {
+        api.execScript({
+            name: 'pdx',
+            script: 'getData()'
+        });
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+    function changeTitle(title){
+      api.sendEvent({
+          name: 'changeTitle',
+          extra: {
+              key1: title
+          }
+      });
+    }
+
+
+</script>
+
+</html>

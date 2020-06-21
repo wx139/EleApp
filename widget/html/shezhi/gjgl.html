@@ -1,0 +1,196 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>告警管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/mobileSelect.css">
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+
+<body>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">告警管理</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+  <ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-label" style="color:white">
+                开始时间
+            </div>
+            <div class="aui-list-item-input">
+                <input type="text" placeholder="" id='starttime' style="color:white"  readonly="readonly"  >
+            </div>
+        </div>
+    </li>
+
+    <li class="aui-list-item">
+         <div class="aui-list-item-inner">
+             <div class="aui-list-item-label" style="color:white">
+                 结束时间
+             </div>
+             <div class="aui-list-item-input">
+                 <input type="text" placeholder="" id='endtime' style="color:white"  readonly="readonly" >
+             </div>
+         </div>
+     </li>
+  </ul>
+  <div class="row white-text" style="text-align:center; margin-top:80px;color:white" id='nc'>
+    <div v-for='item in items'>
+    <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
+    <div class="aui-info-item">
+        <img src="../../image/shebei/Warning.png" style="width:1.5rem" class="aui-img-round" /><span class="aui-margin-l-5" style="color:white">{{item.nickname}}:{{item.warninfo}}</span>
+        </div>
+        <div class="aui-info-item" style="color:white">{{item.time}}</div>
+    </div>
+  </div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../../script/jquery-3.3.1.min.js"></script>
+<script src="../../script/mobileSelect.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    var app;
+    var stselect;
+    var endselect;
+    var year;
+    var month;
+    var date;
+    var year_n;
+    var month_n;
+    var date_n;
+    var years_data=[];
+    var month_data=[];
+    var date_data=[]
+    var sttime;
+    var etime;
+    apiready = function() {
+      var myDate = new Date();
+      year=myDate.getFullYear().toString();
+      month=(myDate.getMonth()+1).toString();
+      lastdate=(myDate.getDate()-3).toString();
+      date=myDate.getDate().toString();
+      year_n=myDate.getFullYear()
+      month_n=myDate.getMonth()
+      date_n=myDate.getDate()-1
+      for(var i=2010;i<2025;i++){
+        years_data.push(i.toString())
+      }
+      for(var i=1;i<13;i++){
+        month_data.push(i.toString())
+      }
+      for(var i=1;i<32;i++){
+        date_data.push(i.toString())
+      }
+      $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+      $api.fixStatusBar($api.dom('header'));
+      app = new Vue({
+       el: '#nc',
+       data: {
+         items: []
+       }
+     })
+    //  设置开始时间和结束时间
+    sttime=year+'-'+month+'-'+lastdate;
+    etime=year+'-'+month+'-'+date;
+    starttime.value=sttime;
+    endtime.value=etime;
+     var stselect = new MobileSelect({
+          trigger: '#starttime',
+          title: '时间选择',
+          wheels: [
+                      {data:years_data},
+                      {data:month_data},
+                      {data:date_data},
+                  ],
+          position:[8,month_n,date_n-3],
+          callback:function(indexArr, data){
+            console.log(data[1]);
+            sttime=data[0]+'-'+data[1]+'-'+data[2]
+            console.log(sttime);
+            starttime.value=sttime;
+            getData()
+          }
+      });
+      var endselect = new MobileSelect({
+           trigger: '#endtime',
+           title: '时间选择',
+           wheels: [
+                       {data:years_data},
+                       {data:month_data},
+                       {data:date_data},
+                   ],
+             position:[8,month_n,date_n],
+           callback:function(indexArr, data){
+               console.log(data[1]);
+               etime=data[0]+'-'+data[1]+'-'+data[2]
+               endtime.value=etime;
+               getData()
+           }
+       });
+      getData()
+    }
+
+    function getData(){
+      api.ajax({
+          url: $api.getStorage('url')+'getwarn/?userid='+$api.getStorage('userid')+'&pageNumber=0&pageSize=1000&fromtime='+sttime+'&totime='+etime,
+          method: 'get',
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret));
+              app.items=[]
+              for(var i=0;i<ret.length;i++){
+                var obj={};
+                data=ret[0]
+                obj.nickname=data;
+                Vue.set(app.items,i,obj)
+                // console.log(JSON.stringify(app.items));
+              }
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+</script>
+
+</html>

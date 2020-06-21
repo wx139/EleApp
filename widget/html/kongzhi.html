@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>控制页面</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+    </style>
+</head>
+
+<body>
+  <img src="../image/bj2.jpg" alt="" id='bg'>
+  <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-title" id='title'>设备概况</div>
+      <a class="aui-pull-right aui-btn " id="1" >
+
+      </a>
+  </header>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    var UIListView;
+    var groupdata=[];
+    var timer;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
+        $api.fixStatusBar( $api.dom('header') );
+
+        UIListView = api.require('UIListView');
+        UIListView.open({
+            rect: {
+                x: 0,
+                y: 70,
+                w: api.winWidth,
+                h: api.frameHeight
+            },
+            data: [
+              {title:''}
+            ],
+            styles: {
+                borderColor: 'rgba(0,0,0,0.5)',
+                item: {
+                    bgColor: 'rgba(0,0,0,0)',
+                    activeBgColor: 'rgba(0,0,0,0)',
+                    height: 60.0,
+                    imgWidth: 40,
+                    imgHeight: 40,
+                    imgCorner: 4,
+                    placeholderImg: '',
+                    titleSize: 16.0,
+                    titleColor: '#000',
+                    subTitleSize: 12.0,
+                    subTitleColor: '#000',
+                    remarkColor: '#00FA9A',
+                    remarkSize: 16,
+                    remarkIconWidth: 30
+                }
+            },
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret.eventType == "clickRightBtn") {
+            }else if(ret.eventType == "clickContent")
+            {
+              api.openWin({
+                  name: 'pdx',
+                  url: 'kongzhi/pdx.html',
+                  slidBackEnabled:false,
+                  pageParam: {
+                      groupid: groupdata[ret.index].uid,
+                      groupname:groupdata[ret.index].title
+                  }
+              });
+            }
+        });
+        changegroup()
+    }
+    function changegroup(){
+      // groupdata=[];
+      api.ajax({
+          url: $api.getStorage('url')+'kongzhi/?id='+$api.getStorage('userid'),
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+            // console.log(JSON.stringify(ret));
+            groupdata=[];
+            for (var i = 0; i < ret.length; i++) {
+              var obj={}
+              // obj.imgPath=ret[i].img;
+              obj.title=ret[i].groupname;
+              obj.remark='在线'+ret[i].online+'/'+ret[i].allnum;
+              obj.uid=ret[i].id
+              groupdata.push(obj)
+            }
+            console.log(JSON.stringify(groupdata));
+            UIListView.reloadData({
+                  data:groupdata
+            });
+
+
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+    }
+
+    //开始监听
+    function startlisten(){
+      timer=setInterval(changegroup, 7000);
+    }
+
+    //停止监听
+    function stoplisten(){
+      clearInterval(timer)
+    }
+
+</script>
+
+</html>

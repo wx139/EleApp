@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>定时控制</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <link rel="stylesheet" type="text/css" href="../../css/mobileSelect.css">
+
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+    </style>
+</head>
+
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">空开管理</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+  <div id='app'>
+
+    <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title" >定时1打开空开</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title" id='k1' onclick="opentime('k1')">{{items.kai1.hour}}:{{items.kai1.min}}</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">是否开启</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.k1'>
+                  <!-- <input type="checkbox" class="aui-switch" v-else> -->
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title">定时1关闭空开</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title" id='g1' onclick="opentime('g1')">{{items.guan1.hour}}:{{items.guan1.min}}</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">是否开启</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.g1' id='guan1'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">定时开关1重复</div>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周一</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.one2'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周二</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.two2'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周三</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.three2'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周四</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.four2'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周五</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.five2'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周六</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.six2'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周日</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.seven2'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title" >定时2打开空开</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title" id='k2' onclick="opentime('k2')">{{items.kai2.hour}}:{{items.kai2.min}}</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">是否开启</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.k2'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:150px">
+                  <div class="aui-list-item-title">定时2关闭空开</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title" id='g2' onclick="opentime('g2')">{{items.guan2.hour}}:{{items.guan2.min}}</div>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">是否开启</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.g2'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">定时开关2重复</div>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周一</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.one1'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周二</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.two1'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周三</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.three1'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周四</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.four1'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周五</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.five1'>
+              </div>
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周六</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.six1'>
+              </div>
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">每周日</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.chongfu.seven1'>
+              </div>
+          </div>
+      </li>
+    </ul>
+    <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:30%">
+                  <div class="aui-list-item-title">已用电量:</div>
+              </div>
+              <div style="width:70%">
+                  <input style="width:130px;border:1px solid #ccc"  disabled="true" v-model='items.yydl'/>
+                  <span style="color:white">（度）</span>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:30%">
+                  <div class="aui-list-item-title">剩余电量:</div>
+              </div>
+              <div style="width:70%">
+                  <input style="width:130px;border:1px solid #ccc"  disabled="true" v-model='items.sydl'/>
+                  <span style="color:white">（度）</span>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:30%">
+                  <div class="aui-list-item-title">预交电费:</div>
+              </div>
+              <div style="width:70%">
+                  <input style="color:white" type="text"   v-model='items.yjdf'/>
+                  <span style="color:white">（元）</span>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:30%">
+                  <div class="aui-list-item-title">电费价格:</div>
+              </div>
+              <div style="width:70%">
+                  <input style="color:white" type="text" v-model='items.dfjg'/>
+                  <span style="color:white">（元/度）</span>
+              </div>
+
+          </div>
+      </li>
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:100px">
+                  <div class="aui-list-item-title">预交费开关</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.yjf'>
+              </div>
+          </div>
+      </li>
+    </ul>
+    <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">过流动作定值:</div>
+              </div>
+              <div style="width:200px">
+                  <input style="color:white" type='text' v-model='items.gldz' placeholder="过流动作定值"/>
+                  <span style="color:white">（A）</span>
+              </div>
+          </div>
+      </li>
+
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">过流报警定值:</div>
+              </div>
+              <div style="width:200px">
+                  <input style="color:white" type='text' v-model='items.zdgldz' placeholder="过流报警定值"/>
+                  <span style="color:white">（A）</span>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.kz1'>
+              </div>
+          </div>
+      </li>
+    </ul>
+
+    <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
+      <li class="aui-list-item">
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">过电压保护:</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.gdybh'>
+              </div>
+          </div>
+          <div class="aui-list-item-inner">
+              <div style="width:70px">
+                  <div class="aui-list-item-title">低电压保护:</div>
+              </div>
+              <div class="aui-list-item-right">
+                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.ddybh'>
+              </div>
+          </div>
+      </li>
+    </ul>
+  </div>
+  <div id='trigger' class="hide"></div>
+  <div lass="aui-list-item-inner" style="margin-top:30px;text-align:center">
+    <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='save()'>保存</div>
+    <div class="aui-btn" onclick="back()">返回</div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../../script/jquery-3.3.1.min.js"></script>
+<script src="../../script/mobileSelect.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../../script/api.js"></script>
+
+<script type="text/javascript">
+    var app;
+    var data={
+       "gldz":0,
+       "zdgldz":0,
+       "gdydz":0,
+       "ddydz":0,
+       "kai1": {
+           "min": 0,
+           "sec": 0,
+           "hour": 0
+       },
+       "guan1": {
+           "min": 0,
+           "sec": 0,
+           "hour": 0
+       },
+       "kai2": {
+           "min": 0,
+           "sec": 0,
+           "hour": 0
+       },
+       "guan2": {
+           "min": 0,
+           "sec": 0,
+           "hour": 0
+       },
+       "chongfu": {
+           "all1": false,
+           "six1": false,
+           "five1": false,
+           "four1": false,
+           "three1": false,
+           "two1": false,
+           "one1": false,
+           "seven1": false,
+           "all2": false,
+           "six2": false,
+           "five2": false,
+           "four2": false,
+           "three2": false,
+           "two2": false,
+           "one2": false,
+           "seven2": false
+       },
+       "glys1": 0,
+       "glys2": 0,
+       "yjf": 0,
+       "fz0_1": {
+           "gdybh":false,
+           "ddybh":false,
+           "k1": false,
+           "g1": false,
+           "k2": false,
+           "g2": false,
+           "yjf": false,
+           "kz1": false,
+           "kz2": false
+       },
+       "data": "0",
+       "yjdf":"0",
+       "dfjg":"0",
+       "yydl":"0",
+       "sydl":"0"
+   }
+    var equNumber;
+    var number;
+    var name;
+    var time1=[]
+    var time2=[]
+    var setid;
+    for(var i=0;i<24;i++){
+      time1.push(i.toString())
+    }
+    for(var i=0;i<60;i++){
+      time2.push(i.toString())
+    }
+    var mySelect;
+    apiready = function() {
+         $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+         mySelect = new MobileSelect({
+          trigger: '#trigger',
+          wheels: [
+                      {data:time1},
+                      {data:time2}
+                  ],
+          position:[1,1], //初始化定位 两个轮子都选中在索引1的选项
+          callback:function(indexArr, data){
+              // $('#'+setid).html(data[0]+':'+data[1])
+              if(setid=='k1'){
+                app.items.kai1.hour=data[0]
+                app.items.kai1.min=data[1]
+              }
+              else if(setid=='k2')
+              {
+                app.items.kai2.hour=data[0]
+                app.items.kai2.min=data[1]
+              }
+              else if(setid=='g1')
+              {
+                app.items.guan1.hour=data[0]
+                app.items.guan1.min=data[1]
+              }
+              else if(setid=='g2')
+              {
+                app.items.guan2.hour=data[0]
+                app.items.guan2.min=data[1]
+              }
+          }
+        });
+
+
+
+        $api.fixStatusBar($api.dom('header'));
+        if(api.pageParam.equNumber){
+          equNumber=api.pageParam.equNumber
+          number=api.pageParam.number
+          name=api.pageParam.name
+        }
+        else {
+          equNumber=-1
+          number=-1
+        }
+        app = new Vue({
+         el: '#app',
+         data: {
+           items: data
+         }
+       })
+
+      getData()
+      setTimeout(getData,1000)
+    }
+
+    function getData(){
+              api.ajax({
+                  url: $api.getStorage('url')+'get4info/?equNumber='+equNumber+'&number='+number,
+                  method: 'get',
+              }, function(ret, err) {
+                  if (ret) {
+                      console.log(JSON.stringify(ret));
+                      if(ret.data=='1'){
+                        setTimeout(getData,1000)
+                      }else {
+                        app.items=ret;
+                        data=ret
+                      }
+
+                  } else {
+                      console.log(JSON.stringify(err));
+                  }
+              });
+    }
+
+
+    function save(){
+      console.log(JSON.stringify(app.items));
+      api.ajax({
+          url: $api.getStorage('url')+'set4info/',
+          method: 'post',
+          data:{
+            values:{
+              data:JSON.stringify(app.items),
+              equNumber:equNumber,
+              number:number
+            }
+          }
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret));
+              data=ret
+              api.toast({
+                  msg: '参数设置成功',
+                  duration: 2000,
+                  location: 'bottom'
+              });
+              api.execScript({
+                  name: 'lcgl',
+                  script: 'getData()'
+              });
+              setTimeout(back,2000);
+
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+
+    }
+
+    function opentime(id){
+      setid=id;
+      $('#trigger').click()
+    }
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+
+
+</script>
+
+</html>

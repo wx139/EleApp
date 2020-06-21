@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注册</title>
+    <!-- <link rel="stylesheet" type="text/css" href="../css/aui.css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+     <!--Import materialize.css-->
+     <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+     <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+     <link type="text/css" rel="stylesheet" href="../../css/materialize.min.css"  media="screen,projection"/>
+     <style type="text/css">
+     #bg{
+          position: fixed;
+          right: 0px;
+          bottom: 0px;
+          min-width: 100%;
+          min-height: 100%;
+          height: auto;
+          width: auto;
+          z-index: -99999;
+          /*加滤镜*/
+          /*-webkit-filter: grayscale(100%);*/
+          /*filter:grayscale(100%);*/
+      }
+      .centerset{
+      float:none !important;
+      margin: auto!important;
+      }
+     </style>
+</head>
+
+<body style="background-color: rgba(0,0,0,0);">
+    <img src="../../image/log.jpeg" alt="" id='bg'>
+
+<div class="container" id='app'>
+  <div class="row" style="margin-top:100px">
+    <div class="col s5 centerset">
+      <img src="../../icon/icon150.png" alt="" width="70%" class="centerset">
+    </div>
+  </div>
+  <div class="row" style="margin-top:30px">
+   <form class="col s12">
+     <div class="row">
+       <div class="input-field col s10 centerset" >
+         <input id="first_name" type="text" class="validate" v-model='sjhm'>
+         <label for="first_name" style="color:#5a4343">手机号码</label>
+       </div>
+     </div>
+     <div class="row">
+       <div class="input-field col s10 centerset" >
+         <div class="col s7">
+           <input id="first_name" type="text" class="validate" v-model='code'>
+           <label for="first_name" style="color:#5a4343">验证码</label>
+         </div>
+         <div class="input-field col s5">
+           <a class="waves-effect waves-light btn" style="display:block;padding:0px" v-on:click='getyzm' :disabled='disabled'>{{yzm}}</a>
+        </div>
+       </div>
+     </div>
+     <div class="row">
+       <div class="input-field col s10 centerset">
+         <input id="password" type="password" class="validate" v-model='mima'>
+         <label for="password" style="color:#5a4343">密码</label>
+       </div>
+     </div>
+   </form>
+ </div>
+ <div class="row">
+   <div class="col s8 centerset">
+     <a class="waves-effect waves-light btn-large" style="display:block" @click='zhuce'>立即注册</a>
+     <a class="waves-effect waves-light btn-smart" style="display:block;margin-top:20px;text-align:center" @click='denglu'>已有账户,立即登录</a>
+
+   </div>
+ </div>
+
+</div>
+
+
+<div>
+
+</div>
+</body>
+<script type = "text/javascript" src = "../../script/api.js" ></script>
+<script type = "text/javascript" src = "../../script/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="../../script/materialize.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      var smsVerify = api.require('smsVerify');
+      smsVerify.register(function(ret, err){
+          if(ret.status){
+              //api.alert({msg: '注册成功'});
+          }else{
+              api.alert({msg: err.code+' 注册失败'});
+          }
+      });
+
+      var vm = new Vue({
+          el: '#app',
+          data: {
+            sjhm:'',
+            yzm:'获取验证码',
+            disabled:false,
+            code:'',
+            mima:'',
+          },
+          // 在 `methods` 对象中定义方法
+          methods: {
+            getyzm: function (event) {
+
+              var smsVerify = api.require('smsVerify');
+              var vm=this;
+              smsVerify.sms({
+                  phone:this.sjhm,
+                  country:"86"
+              },function(ret, err){
+                  if(ret.status){
+                         vm.disabled=true,
+                         setBtn(vm)
+                         api.toast({
+                             msg: '短信发送成功',
+                             duration: 2000,
+                             location: 'middle'
+                         });
+                  }else{
+                      api.toast({
+                          msg: '获取验证码失败',
+                          duration: 2000,
+                          location: 'middle'
+                      });
+
+                  }
+              });
+            },
+            denglu:function(){
+              api.openWin({
+                  name: 'denglu',
+                  url: 'login.html',
+                  slidBackEnabled:false,
+              });
+            },
+            zhuce:function(event){
+              $api.setStorage('name','Tom');
+              if(this.mima==''){
+                api.toast({
+                    msg: '请输入密码！',
+                    duration: 2000,
+                    location: 'middle'
+                });
+                return 0;
+              }else if(this.code==''){
+                api.toast({
+                    msg: '请输入验证码!',
+                    duration: 2000,
+                    location: 'middle'
+                });
+                return 0;
+              }
+
+
+              var smsVerify = api.require('smsVerify');
+              smsVerify.verify({
+                phone:this.sjhm,
+                country:"86",
+                code:this.code
+              },function(ret, err){
+                if(ret.status){
+                  api.ajax({
+                      url: $api.getStorage('url')+'user/',
+                      method: 'post',
+                      data: {
+                          values: {
+                              phoneNumber: vm.sjhm,
+                              passWord:vm.mima
+                          }
+                      }
+                  }, function(ret, err) {
+                      if (ret) {
+                        console.log(JSON.stringify(ret));
+                          api.toast({
+                              msg: '注册成功',
+                              duration: 4000,
+                              location: 'middle'
+                          });
+                          api.openWin({
+                              name: 'login',
+                              url: 'login.html',
+                              slidBackEnabled:false,
+                          });
+
+                      } else {
+                        console.log(JSON.stringify(err));
+                          api.toast({
+                              msg: '注册失败',
+                              duration: 4000,
+                              location: 'middle'
+                          });
+
+                      }
+                  });
+
+
+                }else{
+                    api.toast({
+                        msg: '验证码错误',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+
+                }
+              });
+            }
+          }
+        })
+
+
+      }
+
+      function setBtn(vm)
+      {
+        var timer=null;
+        clearInterval(timer);
+        var time=60;
+        timer=setInterval(function(){
+          if(time<=0){
+            vm.disabled=false;
+            vm.yzm='重新发送';
+              clearInterval(timer);
+          }else{
+            vm.yzm=time+'秒';
+            time--;
+          }
+        },1000)
+      }
+
+</script>
+
+</html>

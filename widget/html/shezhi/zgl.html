@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>配电箱组管理</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+<body>
+    <img src="../../image/bj2.jpg" alt="" id='bg'>
+  <header class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+      <div class="aui-pull-left aui-btn" onclick="back()">
+          <span class="aui-iconfont aui-icon-left"></span>返回
+      </div>
+      <div class="aui-title">配电箱管理</div>
+      <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+          <span class="aui-iconfont aui-icon-search"></span>
+      </div> -->
+  </header>
+    <ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
+        <li class="aui-list-item aui-list-item-middle" v-for='item in items' @click='xgzz(item)'>
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-title" style="color:white">{{item.groupname}}</div>
+        </li>
+        <li class="aui-list-item">
+          <div class="aui-list-item-label-icon">
+               <i class="aui-iconfont aui-icon-plus" style="color:white"></i>
+           </div>
+            <div class="aui-list-item-inner"  onclick='newgroup()'>
+                <div class="aui-list-item-title" style="color:white">新建配电箱</div>
+            </div>
+        </li>
+    </ul>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    // var guanli = document.getElementsByClassName("aui-btn-success");
+    var app;
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+        // url主路径
+
+           app = new Vue({
+          el: '#app',
+          data: {
+            items: []
+          },
+          methods:{
+            //修改配电箱方法，参数配电箱名称，配电箱id，楼层id
+            xgzz:function(item){
+              api.openWin({
+                  name: 'xgzz',
+                  url: 'xgzz.html',
+                  pageParam: {
+                    groupid: item.groupid,
+                    groupname:item.groupname,
+                    cellid:item.cellid
+                  }
+              });
+            }
+          }
+        })
+        getData()
+
+    }
+    function getData(){
+    api.ajax({
+        url: $api.getStorage('url')+'groups/?id='+$api.getStorage('userid'),
+        method: 'get',
+    }, function(ret, err) {
+        if (ret) {
+          console.log(JSON.stringify(ret));
+            app.items=[]
+            for(var i=0;i<ret.length;i++){
+              var obj={};
+              obj.groupname=ret[i].groupname;
+              obj.groupid=ret[i].id;
+              obj.cellid=ret[i].cellid;
+              Vue.set(app.items,i,obj)
+            }
+        } else {
+            console.log(JSON.stringify(err));
+        }
+    });
+    }
+
+    //返回方法
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+    //新建配电箱方法
+    function newgroup(){
+      api.openWin({
+          name: 'xzz',
+          url: 'xzz.html',
+          pageParam: {
+
+          }
+      });
+    }
+</script>
+
+</html>

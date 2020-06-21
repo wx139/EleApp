@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style type="text/css">
+    #bg{
+         position: fixed;
+         right: 0px;
+         bottom: 0px;
+         min-width: 100%;
+         min-height: 100%;
+         height: auto;
+         width: auto;
+         z-index: -99999;
+         /*加滤镜*/
+         /*-webkit-filter: grayscale(100%);*/
+         /*filter:grayscale(100%);*/
+     }
+     ._white{
+       color: white!important
+     }
+    </style>
+</head>
+<body>
+  <img src="../../image/bj2.jpg" alt="" id='bg'>
+<header class="aui-bar aui-bar-nav"  style="background-color:rgba(0,0,0,0);position:fixed">
+    <div class="aui-pull-left aui-btn" onclick="back()">
+        <span class="aui-iconfont aui-icon-left"></span>返回
+    </div>
+    <div class="aui-title">设备列表</div>
+    <!-- <div class="aui-pull-right aui-btn aui-btn-outlined">
+        <span class="aui-iconfont aui-icon-search"></span>
+    </div> -->
+</header>
+
+  <section class="aui-content" style="margin-top:80px">
+      <ul class="aui-list aui-list-in aui-margin-b-15" style="background-color:rgba(0,0,0,0)" id='shebei'>
+          <li class="aui-list-item" v-for='item in items'>
+              <div class="aui-list-item-label-icon">
+                  <i class="aui-iconfont aui-icon-location aui-text-info"></i>
+              </div>
+              <div class="aui-list-item-inner aui-list-item-arrow" v-on:click='getcheck(item)' tapmode="">
+                  <div class="aui-list-item-title _white" >{{item.nickname}}</div>
+              </div>
+          </li>
+          <li class="aui-list-item">
+            <div class="aui-list-item-label-icon">
+                 <i class="aui-iconfont aui-icon-plus" style="color:white"></i>
+             </div>
+              <div class="aui-list-item-inner"  onclick='newsb()'>
+                  <div class="aui-list-item-title" style="color:white">新增空开</div>
+              </div>
+          </li>
+      </ul>
+      <div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
+        <div class="aui-btn" onclick="deletewg()">全部删除</div>
+      </div>
+  </section>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+    items=[]
+    var v_shebei;
+    var equNumber='';
+    apiready = function() {
+        $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
+        $api.fixStatusBar($api.dom('header'));
+        if(api.pageParam.equNumber){
+          equNumber=api.pageParam.equNumber
+        }
+        v_shebei = new Vue({
+         el: '#shebei',
+         data: {
+           items: items
+         },
+         methods:{
+           getcheck:function(item){
+             api.openWin({
+                 name: 'sbgl-detail',
+                 url: 'sbgl-detail.html',
+                 pageParam: {
+                     equinfo:item
+                 }
+             });
+           },
+         }
+
+        })
+        getData()
+    }
+
+    function getData(){
+      api.ajax({
+            url: $api.getStorage('url')+'getallequ/?equNumber='+equNumber,
+            method: 'get',
+        }, function(ret, err) {
+            if (ret) {
+              console.log(JSON.stringify(ret));
+                v_shebei.items=ret
+                // v_shebei.items=ret.equarr
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+
+    function back() {
+        api.historyBack({
+            frameName: ''
+        }, function(ret, err) {
+            if (!ret.status) {
+                api.closeWin();
+            }
+        });
+    }
+
+
+    function newsb(){
+      api.openWin({
+          name: 'xzsb',
+          url: 'xzsb.html',
+          pageParam: {
+            equNumber:equNumber
+          }
+      });
+    }
+
+    function deletewg(){
+      api.ajax({
+            url: $api.getStorage('url')+'equsalldel/?equNumber='+equNumber,
+            method: 'get',
+        }, function(ret, err) {
+            console.log(JSON.stringify(ret));
+            if (ret) {
+              if(ret.type=='ok'){
+                api.toast({
+                    msg: '网关删除成功!',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                api.execScript({
+                    name: 'sbgl',
+                    script: 'getData()'
+                });
+                setTimeout(back,2000);
+              }else{
+                api.toast({
+                    msg: '网关删除失败!',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+              }
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+</script>
+
+</html>

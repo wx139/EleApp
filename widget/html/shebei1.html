@@ -1,0 +1,303 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设备</title>
+
+</head>
+
+<body>
+  <ul class="aui-list aui-list-in">
+       <li class="aui-list-header">
+       </li>
+   </ul>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      var titlelist=[];
+      var celldata=[];
+      var paths=[];
+      var context=[];
+      var UIListView = api.require('UIListView');
+      UIListView.open({
+          rect: {
+              x: 0,
+              y: api.winHeight / 2,
+              w: api.winWidth,
+              h: api.winHeight / 2,
+          },
+          data: [
+            {title:'ddd'}
+          ],
+          rightBtns: [{
+              bgColor: '#00CD00',
+              activeBgColor: '',
+              width: 70,
+              title: '管理',
+              titleSize: 12,
+              titleColor: '#fff',
+              icon: '',
+              iconWidth: 20
+          },{
+              bgColor: '#5CACEE',
+              activeBgColor: '',
+              width: 70,
+              title: '预缴费',
+              titleSize: 12,
+              titleColor: '#fff',
+              icon: '',
+              iconWidth: 20
+          }],
+          styles: {
+              borderColor: '#C1C1C1',
+              item: {
+                  bgColor: '#FFFFFF',
+                  activeBgColor: '#F5F5F5',
+                  height: 60.0,
+                  imgWidth: 40,
+                  imgHeight: 40,
+                  imgCorner: 4,
+                  placeholderImg: '',
+                  titleSize: 16.0,
+                  titleColor: '#000',
+                  subTitleSize: 12.0,
+                  subTitleColor: '#000',
+                  remarkColor: '#00FA9A',
+                  remarkSize: 16,
+                  remarkIconWidth: 30
+              }
+          },
+          fixedOn: api.frameName
+      }, function(ret, err) {
+        console.log(ret.eventType);
+        if (ret.eventType == "clickRightBtn") {
+            if (ret.btnIndex == 0) {
+              api.openWin({
+                  name: 'pdx',
+                  url: 'kongzhi/pdx.html',
+                  pageParam: {
+                      groupid: groupdata[ret.index].uid,
+                      groupname:groupdata[ret.index].title
+                  }
+              });
+            }else if(ret.btnIndex==1){
+              api.openWin({
+                  name: 'yjf',
+                  url: 'kongzhi/yjf.html',
+                  pageParam: {
+                      name: 'test'
+                  }
+              });
+            }
+        }else if(ret.eventType == "clickContent")
+        {
+          api.openWin({
+              name: 'pdx',
+              url: 'kongzhi/pdx.html',
+              pageParam: {
+                  groupid: groupdata[ret.index].uid,
+                  groupname:groupdata[ret.index].title
+              }
+          });
+        }
+      });
+      getData()
+
+      function getData()
+      {
+        api.ajax({
+            url: 'http://112.74.173.119/cells/?format=json',
+            method: 'get',
+            data: {}
+        }, function(ret, err) {
+            if (ret) {
+                // data=ret.data[0]
+                // keylist=Object.getOwnPropertyNames(data);
+                for (var i = 0; i < ret.length; i++) {
+                  var objname={}
+                  objname.name=ret[i].cellname;
+                  titlelist.push(objname.name);
+                  celldata.push(objname)
+                                    var cstr='实时负荷:'+'2200'+'kW \n今日电费:'+'302'+'元\n本月用电累计:'+'3233'+'KW\n本月电费:'+'2323'+'元'
+                  paths.push(ret[i].img)
+                  context.push(cstr)
+                }
+                UIScrollPicture.reloadData({
+                    data: {
+                        paths: paths,
+                        captions: context
+                    }
+                });
+                changegroup()
+
+            } else {
+                // api.alert({
+                //     msg: JSON.stringify(err)
+                // });
+            }
+        });
+      }
+
+
+        var UIScrollPicture = api.require('UIScrollPicture');
+        UIScrollPicture.open({
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: api.winHeight / 2
+            },
+            data: {
+                paths: [
+                  'http://img.taopic.com/uploads/allimg/120727/201995-120HG1030762.jpg'
+                ],
+                captions: []
+            },
+            styles: {
+                caption: {
+                    height: 85,
+                    color: '#000000',
+                    size: 16,
+                    bgColor: '#FFFFFF',
+                    position: 'bottom'
+                },
+                indicator: {
+                    align: 'center',
+                    color: '#FFFFFF',
+                    activeColor: '#DA70D6'
+                }
+            },
+            placeholderImg: 'widget://res/slide1.jpg',
+            contentMode: 'scaleToFill',
+            interval: 1000,
+            fixedOn: api.frameName,
+            loop: true,
+            fixed: false
+        }, function(ret, err) {
+            if (ret) {
+                // alert(JSON.stringify(ret));
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+        UIScrollPicture.addEventListener({
+            name: 'scroll'
+        }, function(ret, err) {
+            if (ret) {
+                changeTitle(titlelist[ret.index])
+            } else {
+                // alert(JSON.stringify(err));
+            }
+        });
+
+
+
+
+        api.addEventListener({
+            name: 'showCell'
+        }, function(ret, err) {
+          var UIActionSelector = api.require('UIActionSelector');
+          UIActionSelector.open({
+              datas: celldata,
+              layout: {
+                  row: 5,
+                  col: 1,
+                  height: 30,
+                  size: 12,
+                  sizeActive: 14,
+                  rowSpacing: 5,
+                  colSpacing: 10,
+                  maskBg: 'rgba(0,0,0,0.2)',
+                  bg: '#fff',
+                  color: '#888',
+                  colorActive: '#f00',
+                  colorSelected: '#f00'
+              },
+              animation: true,
+              cancel: {
+                  text: '取消',
+                  size: 12,
+                  w: 90,
+                  h: 35,
+                  bg: '#fff',
+                  bgActive: '#ccc',
+                  color: '#888',
+                  colorActive: '#fff'
+              },
+              ok: {
+                  text: '确定',
+                  size: 12,
+                  w: 90,
+                  h: 35,
+                  bg: '#fff',
+                  bgActive: '#ccc',
+                  color: '#888',
+                  colorActive: '#fff'
+              },
+              title: {
+                  text: '请选择',
+                  size: 12,
+                  h: 44,
+                  bg: '#eee',
+                  color: '#888'
+              },
+              fixedOn: api.frameName
+          }, function(ret, err) {
+              if (ret) {
+                  var mes=ret.level1;
+                  // console.log(mes)
+                  changeTitle(mes);
+              } else {
+                  // alert(JSON.stringify(err));
+              }
+          });
+
+        });
+        var groupdata=[];
+        function changegroup(){
+          groupdata=[];
+          api.ajax({
+              url: 'http://112.74.173.119/groups/?format=json',
+              method: 'get',
+              data: {}
+          }, function(ret, err) {
+              if (ret) {
+                // keylist=Object.getOwnPropertyNames(data);
+                for (var i = 0; i < ret.length; i++) {
+                  var obj={}
+                  obj.imgPath=ret[i].img;
+                  obj.title=ret[i].groupname;
+                  obj.remark='在线'+ret[i].equipment.length+'/'+ret[i].equipment.length;
+                  obj.uid=ret[i].id
+                  groupdata.push(obj)
+                }
+                UIListView.reloadData({
+                      data:groupdata
+                  });
+
+
+              } else {
+                  // api.alert({
+                  //     msg: JSON.stringify(err)
+                  // });
+              }
+          });
+        }
+    }
+
+    function changeTitle(title){
+      api.sendEvent({
+          name: 'changeTitle',
+          extra: {
+              key1: title
+          }
+      });
+    }
+</script>
+
+</html>
