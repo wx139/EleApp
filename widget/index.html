@@ -22,8 +22,8 @@
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript">
-    var iflyRecognition;
-    var iflyRead;
+    // var iflyRecognition;
+    // var iflyRead;
     apiready = function(){
 
       api.addEventListener({
@@ -32,35 +32,35 @@
           return false
       });
       $api.setStorage('lasttag',0)
-       $api.setStorage('url','http://112.74.173.119/')
-       $api.setStorage('ur','http://112.74.173.119')
+       $api.setStorage('url','http://122.112.167.37:8001/')
+       $api.setStorage('ur','http://122.112.167.37:8001')
       // $api.setStorage('url','http://192.168.31.225:8080/')
       // $api.setStorage('ur','http://192.168.31.225:8080')
       // $api.setStorage('url','http://192.168.241.45:8000/')
       // $api.setStorage('ur','http://192.168.241.45:8000')
 
-      iflyRecognition = api.require('iflyRecognition');
-      iflyRead=api.require('iflyRecognition');
-      iflyRead.createUtility({
-          ios_appid: '5bc42c3d',
-          android_appid: '5bc40ab1'
-      }, function(ret, err) {
-          if (ret.status) {
-              console.log({ msg: '创建成功'});
-          } else {
-              console.log({ msg: "创建失败" });
-          }
-      });
-      iflyRecognition.createUtility({
-          ios_appid: '5bc42c3d',
-          android_appid: '5bc40ab1'
-      }, function(ret, err) {
-          if (ret.status) {
-              console.log({ msg: '创建成功'});
-          } else {
-              console.log({ msg: "创建失败" });
-          }
-      });
+
+      // iflyRead=api.require('iflyRecognition');
+      // iflyRead.createUtility({
+      //     ios_appid: '5bc42c3d',
+      //     android_appid: '5bc40ab1'
+      // }, function(ret, err) {
+      //     if (ret.status) {
+      //         console.log({ msg: '创建成功'});
+      //     } else {
+      //         console.log({ msg: "创建失败" });
+      //     }
+      // });
+      // iflyRecognition.createUtility({
+      //     ios_appid: '5bc42c3d',
+      //     android_appid: '5bc40ab1'
+      // }, function(ret, err) {
+      //     if (ret.status) {
+      //         console.log({ msg: '创建成功'});
+      //     } else {
+      //         console.log({ msg: "创建失败" });
+      //     }
+      // });
 
       //iflylisten();
 
@@ -258,203 +258,203 @@
   });
 }
 
-function startlisten(index){
-  if(index==0){
-    api.execScript({
-        frameName: 'zhuye',
-        script: 'startlisten()'
-    });
-  }else if (index==1) {
-    api.execScript({
-        frameName: 'shebei',
-        script: 'startlisten()'
-    });
-  }else if (index==2) {
-    api.execScript({
-        frameName: 'fenxi',
-        script: 'startlisten()'
-    });
-  }else if (index==3) {
-    api.execScript({
-        frameName: 'kongzhi',
-        script: 'startlisten()'
-    });
-  }else if (index==4) {
-    api.execScript({
-        frameName: 'shezhi',
-        script: 'startlisten()'
-    });
-  }
-}
+// function startlisten(index){
+//   if(index==0){
+//     api.execScript({
+//         frameName: 'zhuye',
+//         script: 'startlisten()'
+//     });
+//   }else if (index==1) {
+//     api.execScript({
+//         frameName: 'shebei',
+//         script: 'startlisten()'
+//     });
+//   }else if (index==2) {
+//     api.execScript({
+//         frameName: 'fenxi',
+//         script: 'startlisten()'
+//     });
+//   }else if (index==3) {
+//     api.execScript({
+//         frameName: 'kongzhi',
+//         script: 'startlisten()'
+//     });
+//   }else if (index==4) {
+//     api.execScript({
+//         frameName: 'shezhi',
+//         script: 'startlisten()'
+//     });
+//   }
+// }
 
-function iflylisten(){
-  console.log('dsd');
-  iflyRecognition.record({
-      vadbos: 1500,
-      vadeos: 1500,
-      rate: 16000,
-      asrptt: 0,
-  }, function(ret, err) {
-      if (ret.status) {
-        if (ret.wordStr != '' && ret.wordStr != null) {
-          //console.log(ret.wordStr.toString());
-        }
-        if(ret.wordStr.indexOf('打开') > -1){
-          var sbname;
-          sb=ret.wordStr.split('打开')
-          if(sb[0]==''&&sb[1]!=''){
-            sbname=sb[1]
-          }else if(sb[0]!=''&&sb[1]=='')
-          {
-            sbname=sb[0]
-          }
-          else{
-            return
-          }
-          console.log($api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname);
-          api.ajax({
-              url: $api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname,
-              method: 'get',
-          }, function(ret, err) {
-              if(ret==undefined||ret==null||ret==''||ret.length==0)
-              {
-                readword('没有找到这个设备')
-              }
-              if (ret) {
-                  if(ret==undefined||ret==null||ret==''||ret.length==0)
-                  {
-                    readword('没有找到这个设备')
-                  }
-                  else{
-                    api.ajax({
-                      url: $api.getStorage('url')+'switchequ/?equNumber='+ret[0]+'&number='+ret[1]+'&switch=open',
-                        method: 'get',
-                    },
-                    function(ret, err) {
-                        if (ret) {
-                            console.log(JSON.stringify(ret));
-                            readword(' '+'已成功打开'+sbname+'   ')
+// function iflylisten(){
+//   console.log('dsd');
+//   iflyRecognition.record({
+//       vadbos: 1500,
+//       vadeos: 1500,
+//       rate: 16000,
+//       asrptt: 0,
+//   }, function(ret, err) {
+//       if (ret.status) {
+//         if (ret.wordStr != '' && ret.wordStr != null) {
+//           //console.log(ret.wordStr.toString());
+//         }
+//         if(ret.wordStr.indexOf('打开') > -1){
+//           var sbname;
+//           sb=ret.wordStr.split('打开')
+//           if(sb[0]==''&&sb[1]!=''){
+//             sbname=sb[1]
+//           }else if(sb[0]!=''&&sb[1]=='')
+//           {
+//             sbname=sb[0]
+//           }
+//           else{
+//             return
+//           }
+//           console.log($api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname);
+//           api.ajax({
+//               url: $api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname,
+//               method: 'get',
+//           }, function(ret, err) {
+//               if(ret==undefined||ret==null||ret==''||ret.length==0)
+//               {
+//                 readword('没有找到这个设备')
+//               }
+//               if (ret) {
+//                   if(ret==undefined||ret==null||ret==''||ret.length==0)
+//                   {
+//                     readword('没有找到这个设备')
+//                   }
+//                   else{
+//                     api.ajax({
+//                       url: $api.getStorage('url')+'switchequ/?equNumber='+ret[0]+'&number='+ret[1]+'&switch=open',
+//                         method: 'get',
+//                     },
+//                     function(ret, err) {
+//                         if (ret) {
+//                             console.log(JSON.stringify(ret));
+//                             readword(' '+'已成功打开'+sbname+'   ')
+//
+//                         } else {
+//                           console.log(JSON.stringify(err));
+//                           readword('打开'+sbname+'失败')
+//                         }
+//                     });
+//                   }
+//               } else {
+//                   console.log(JSON.stringify(err));
+//               }
+//           });
+//         }
+//         if(ret.wordStr.indexOf('关闭') > -1){
+//           var sbname;
+//           sb=ret.wordStr.split('关闭')
+//           if(sb[0]==''&&sb[1]!=''){
+//             sbname=sb[1]
+//           }else if(sb[0]!=''&&sb[1]=='')
+//           {
+//             sbname=sb[0]
+//           }
+//           else{
+//             return
+//           }
+//           console.log($api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname);
+//           api.ajax({
+//               url: $api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname,
+//               method: 'get',
+//           }, function(ret, err) {
+//               if(ret==undefined||ret==null||ret==''||ret.length==0)
+//               {
+//                 readword('没有找到这个设备')
+//               }
+//               if (ret) {
+//                   if(ret.length==0)
+//                   {
+//                     readword('没有找到这个设备')
+//                   }
+//                   else{
+//                     api.ajax({
+//                       url: $api.getStorage('url')+'switchequ/?equNumber='+ret[0]+'&number='+ret[1]+'&switch=close',
+//                         method: 'get',
+//                     },
+//                     function(ret, err) {
+//                         if (ret) {
+//                             console.log(JSON.stringify(ret));
+//                             readword(' '+'已成功关闭'+sbname+' ')
+//                         } else {
+//                           console.log(JSON.stringify(err));
+//                           readword('关闭'+sbname+'失败')
+//                         }
+//                     });
+//                   }
+//               } else {
+//                   console.log(JSON.stringify(err));
+//               }
+//           });
+//         }
+//         else {
+//           iflylisten();
+//           return;
+//         }
+//         console.log(ret.wordStr.toString());
+//         iflylisten();
+//         return;
+//       } else {
+//         iflylisten();
+//         return;
+//       }
+//   });
+// }
 
-                        } else {
-                          console.log(JSON.stringify(err));
-                          readword('打开'+sbname+'失败')
-                        }
-                    });
-                  }
-              } else {
-                  console.log(JSON.stringify(err));
-              }
-          });
-        }
-        if(ret.wordStr.indexOf('关闭') > -1){
-          var sbname;
-          sb=ret.wordStr.split('关闭')
-          if(sb[0]==''&&sb[1]!=''){
-            sbname=sb[1]
-          }else if(sb[0]!=''&&sb[1]=='')
-          {
-            sbname=sb[0]
-          }
-          else{
-            return
-          }
-          console.log($api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname);
-          api.ajax({
-              url: $api.getStorage('url')+'searchnickname/?userid='+$api.getStorage('userid')+'&nickname='+sbname,
-              method: 'get',
-          }, function(ret, err) {
-              if(ret==undefined||ret==null||ret==''||ret.length==0)
-              {
-                readword('没有找到这个设备')
-              }
-              if (ret) {
-                  if(ret.length==0)
-                  {
-                    readword('没有找到这个设备')
-                  }
-                  else{
-                    api.ajax({
-                      url: $api.getStorage('url')+'switchequ/?equNumber='+ret[0]+'&number='+ret[1]+'&switch=close',
-                        method: 'get',
-                    },
-                    function(ret, err) {
-                        if (ret) {
-                            console.log(JSON.stringify(ret));
-                            readword(' '+'已成功关闭'+sbname+' ')
-                        } else {
-                          console.log(JSON.stringify(err));
-                          readword('关闭'+sbname+'失败')
-                        }
-                    });
-                  }
-              } else {
-                  console.log(JSON.stringify(err));
-              }
-          });
-        }
-        else {
-          iflylisten();
-          return;
-        }
-        console.log(ret.wordStr.toString());
-        iflylisten();
-        return;
-      } else {
-        iflylisten();
-        return;
-      }
-  });
-}
 
-
-function readword(word){
-  iflyRecognition.read({
-      readStr: '    '+word,
-      speed: 40,
-      volume: 100,
-      voice: 1,
-      rate: 16000,
-  }, function(ret, err) {
-      if (ret.status) {
-          if(ret.speakProgress==100){
-            iflylisten()
-          }
-
-      } else {
-          api.alert({ msg: err.msg });
-          iflylisten()
-      }
-  });
-}
-
-function stoplisten(index){
-  if(index==0){
-    api.execScript({
-        frameName: 'zhuye',
-        script: 'stoplisten()'
-    });
-  }else if (index==1) {
-    api.execScript({
-        frameName: 'shebei',
-        script: 'stoplisten()'
-    });
-  }else if (index==2) {
-    api.execScript({
-        frameName: 'fenxi',
-        script: 'stoplisten()'
-    });
-  }else if (index==3) {
-    api.execScript({
-        frameName: 'kongzhi',
-        script: 'stoplisten()'
-    });
-  }else if (index==4) {
-    api.execScript({
-        frameName: 'shezhi',
-        script: 'stoplisten()'
-    });
-  }
-}
+// function readword(word){
+//   iflyRecognition.read({
+//       readStr: '    '+word,
+//       speed: 40,
+//       volume: 100,
+//       voice: 1,
+//       rate: 16000,
+//   }, function(ret, err) {
+//       if (ret.status) {
+//           if(ret.speakProgress==100){
+//             iflylisten()
+//           }
+//
+//       } else {
+//           api.alert({ msg: err.msg });
+//           iflylisten()
+//       }
+//   });
+// }
+//
+// function stoplisten(index){
+//   if(index==0){
+//     api.execScript({
+//         frameName: 'zhuye',
+//         script: 'stoplisten()'
+//     });
+//   }else if (index==1) {
+//     api.execScript({
+//         frameName: 'shebei',
+//         script: 'stoplisten()'
+//     });
+//   }else if (index==2) {
+//     api.execScript({
+//         frameName: 'fenxi',
+//         script: 'stoplisten()'
+//     });
+//   }else if (index==3) {
+//     api.execScript({
+//         frameName: 'kongzhi',
+//         script: 'stoplisten()'
+//     });
+//   }else if (index==4) {
+//     api.execScript({
+//         frameName: 'shezhi',
+//         script: 'stoplisten()'
+//     });
+//   }
+// }
 
 </script>
 </html>

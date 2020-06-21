@@ -234,7 +234,7 @@
         }
 
         //出发位置获取方法
-        getLocation();
+        // getLocation();
 
         //扫描仪监听
         api.addEventListener({
@@ -306,30 +306,32 @@
     }
     function getData()
     {
+      console.log($api.getStorage('token'))
       api.ajax({
-          url: $api.getStorage('url')+'getsydata/?id='+$api.getStorage('userid'),
+          header:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'analysisdata/totaldata/',
           method: 'get',
           data: {}
       }, function(ret, err) {
           if (ret) {
-            console.log(JSON.stringify(ret));
-              data=ret
-              app.item=data;
+            // console.log(JSON.stringify(ret));
+              // data=ret
+              // app.item=data;
 
           } else {
-              console.log(JSON.stringify(err));
+              // console.log(JSON.stringify(err));
           }
       });
     }
 
-    function startlisten(){
-      timer=setInterval(getData,60000)
-    }
-
-
-    function stoplisten(){
-      clearInterval(timer)
-    }
+    // function startlisten(){
+    //   timer=setInterval(getData,60000)
+    // }
+    //
+    //
+    // function stoplisten(){
+    //   clearInterval(timer)
+    // }
 
       //扫描的方法
     function scaner(){

@@ -118,12 +118,12 @@
                 return 0;
               }
               api.ajax({
-                  url: $api.getStorage('url')+'login/',
+                  url: $api.getStorage('url')+'user/login/',
                   method: 'post',
                   data: {
                       values: {
-                          phoneNumber: vm.sjhm,
-                          passWord:vm.mima
+                          username: vm.sjhm,
+                          password:vm.mima
                       }
                   }
               }, function(ret, err) {
@@ -136,7 +136,8 @@
                       });
                       vm.sjhm=''
                       vm.mima=''
-                      setTimeout(getindex(ret[0].id,2000))
+
+                      setTimeout(getindex(ret['data']['token'],2000))
                   } else {
                        console.log(JSON.stringify(err));
                       api.toast({
@@ -163,7 +164,7 @@
 
 
       function getindex(id){
-        $api.setStorage('userid',id)
+        $api.setStorage('token',id)
         api.openWin({
             name: 'index',
             url: '../../index.html',
