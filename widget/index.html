@@ -68,7 +68,7 @@
          $api.setStorage('bg','../image/bj/bj14.jpg')
        }
       // 设置内容页
-      if($api.getStorage('userid')==''||$api.getStorage('userid')==undefined) {
+      if($api.getStorage('token')==''||$api.getStorage('token')==undefined) {
         api.openWin({
             name: 'login',
             url: 'html/log/login.html',
@@ -247,9 +247,9 @@
     if(ret.index==undefined){
       return;
     }
-    stoplisten($api.getStorage('lasttag'))
-    // console.log(ret.index);
-    startlisten(ret.index)
+    // stoplisten($api.getStorage('lasttag'))
+    // // console.log(ret.index);
+    // startlisten(ret.index)
     $api.setStorage('lasttag',ret.index)
     api.setFrameGroupIndex({
       name: 'main',

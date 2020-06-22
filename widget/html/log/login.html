@@ -163,8 +163,9 @@
       }
 
 
-      function getindex(id){
-        $api.setStorage('token',id)
+      function getindex(token){
+        console.log(token);
+        $api.setStorage('token',token)
         api.openWin({
             name: 'index',
             url: '../../index.html',

@@ -92,31 +92,31 @@
             <td>{{item.tPower}}</td>
           </tr>
           <tr>
-            <td>本月总电费</td>
-            <td>¥</td>
-            <td>{{item.month_eleFee}}</td>
+            <td>设备总数</td>
+            <td>个</td>
+            <td>{{item.devicetotal_count}}</td>
           </tr>
           <tr>
-            <td>本天用电度数</td>
+            <td>设备在线数</td>
+            <td>个</td>
+            <td>{{item.deviceonline_count}}</td>
+          </tr>
+          <tr>
+            <td>告警总次数</td>
+            <td>次</td>
+            <td>{{item.warn_count}}</td>
+          </tr>
+          <tr>
+            <td>今日用电量</td>
             <td>度</td>
-            <td>{{item.day_eleNum}}</td>
-          </tr>
-          <tr>
-            <td>当天电费</td>
-            <td>¥</td>
-            <td>{{item.day_eleFee}}</td>
-          </tr>
-          <tr>
-            <td>本周用电度数</td>
-            <td>度</td>
-            <td>{{item.week_eleNum}}</td>
+            <td>{{item.ele}}</td>
           </tr>
 
-          <tr>
+          <!-- <tr>
             <td>本周电费</td>
             <td>¥</td>
             <td>{{item.week_eleFee}}</td>
-          </tr>
+          </tr> -->
           <!-- <tr>
             <td>当前负载率</td>
             <td></td>
@@ -146,7 +146,14 @@
       app = new Vue({
       el: '#app',
         data: {
-          item:{}
+          item:{
+            'tPower':0,
+            'devicetotal_count':0,
+            'deviceonline_count':0,
+            'warn_count':0,
+            'ele':0,
+            'week_eleFee':0,
+          }
         }
       })
       getData()
@@ -306,32 +313,72 @@
     }
     function getData()
     {
-      console.log($api.getStorage('token'))
       api.ajax({
-          header:{"Authorization":$api.getStorage('token')},
+          headers:{"Authorization":$api.getStorage('token')},
           url: $api.getStorage('url')+'analysisdata/totaldata/',
           method: 'get',
           data: {}
       }, function(ret, err) {
           if (ret) {
-            // console.log(JSON.stringify(ret));
+            console.log(JSON.stringify(ret.items['power']));
               // data=ret
+              app.item.tPower=ret.items['power'].toFixed(2)
               // app.item=data;
 
           } else {
-              // console.log(JSON.stringify(err));
+              console.log(JSON.stringify(err));
+          }
+      });
+      api.ajax({
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'analysisdata/devicedata/',
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+            console.log(JSON.stringify(ret.items['devicetotal_count']));
+              // data=ret
+              app.item.devicetotal_count=ret.items['devicetotal_count']
+              app.item.deviceonline_count=ret.items['deviceonline_count']
+              // app.item=data;
+
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+      api.ajax({
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'analysisdata/totalwarn/',
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+            console.log(JSON.stringify(ret.items['count']));
+              // data=ret
+              app.item.warn_count=ret.items['count']
+              // app.item=data;
+
+          } else {
+              console.log(JSON.stringify(err));
+          }
+      });
+      api.ajax({
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'analysisdata/eleList_30/',
+          method: 'get',
+          data: {}
+      }, function(ret, err) {
+          if (ret) {
+            console.log(JSON.stringify(ret.items[0]));
+              // data=ret
+              app.item.ele=ret.items[ret.items.length-1]['ele'].toFixed(2)
+              // app.item=data;
+
+          } else {
+              console.log(JSON.stringify(err));
           }
       });
     }
-
-    // function startlisten(){
-    //   timer=setInterval(getData,60000)
-    // }
-    //
-    //
-    // function stoplisten(){
-    //   clearInterval(timer)
-    // }
 
       //扫描的方法
     function scaner(){

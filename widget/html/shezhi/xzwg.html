@@ -61,6 +61,7 @@
            </div>
        </div>
    </li>
+
    <li class="aui-list-item">
         <div class="aui-list-item-inner">
             <div class="aui-list-item-label" style="color:white">
@@ -71,6 +72,20 @@
             </div>
         </div>
     </li>
+
+    <li class="aui-list-item">
+         <div class="aui-list-item-inner">
+             <div class="aui-list-item-label" style="color:white">
+                 所属分组
+             </div>
+             <div class="aui-list-item-input">
+                 <select id='cellselect' style="color:white" >
+                     <option v-for='item in items' :value='item.cellid' selected="selected" v-if='item.cellid==cellid'>{{item.cellname}}</option>
+                      <option v-for='item in items' :value='item.cellid'  v-if='item.cellid!=cellid'>{{item.cellname}}</option>
+                 </select>
+             </div>
+         </div>
+     </li>
 </ul>
 <div lass="aui-list-item-inner" style="margin-top:50px;text-align:center">
   <div class="aui-btn aui-btn-info" style="margin-right:50px;" onclick='save()'>新增</div>
