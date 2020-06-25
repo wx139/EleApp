@@ -52,7 +52,7 @@
                     <div class="aui-list-item-inner aui-list-item-arrow">
                         <div class="aui-list-item-text text-white aui-font-size-18">{{items[0].userName}}</div>
                         <div class="aui-list-item-text text-white">
-                            <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{items[0].phoneNumber}}</div>
+                            <div><i class="aui-iconfont aui-icon-mobile aui-font-size-14"></i>{{items[0].emailNumber}}</div>
                         </div>
                     </div>
                 </div>
@@ -152,20 +152,22 @@
             items: [{}]
           }
         })
-        // getData()
+        getData()
 
     }
 
     function getData(){
       api.ajax({
-      url: $api.getStorage('url')+'user/'+$api.getStorage('userid'),
+        headers:{"Authorization":$api.getStorage('token')},
+        url: $api.getStorage('url')+'user/info',
             method: 'get',
         }, function(ret, err) {
             var obj={}
             if (ret) {
-              obj.phoneNumber=ret.phoneNumber;
-              obj.userName=ret.userName;
-              console.log(JSON.stringify(ret));
+              // console.log(JSON.stringify(ret.data));
+              obj.emailNumber=ret.data.email;
+              obj.userName=ret.data.username;
+              // console.log(JSON.stringify(ret));
               Vue.set(app.items,0,obj)
             } else {
               console.log(JSON.stringify(err));

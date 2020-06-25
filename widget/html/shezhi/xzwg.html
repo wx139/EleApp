@@ -43,7 +43,18 @@
   <li class="aui-list-item">
       <div class="aui-list-item-inner">
           <div class="aui-list-item-label" style="color:white">
-              设备号
+              设备名称:
+          </div>
+          <div class="aui-list-item-input">
+              <input type="text" placeholder="" id='devicename' style="color:white" >
+          </div>
+      </div>
+  </li>
+
+  <li class="aui-list-item">
+      <div class="aui-list-item-inner">
+          <div class="aui-list-item-label" style="color:white">
+              设备编号:
           </div>
           <div class="aui-list-item-input">
               <input type="text" placeholder="" id='sn' style="color:white" >
@@ -54,10 +65,10 @@
   <li class="aui-list-item">
        <div class="aui-list-item-inner">
            <div class="aui-list-item-label" style="color:white">
-               空开数量
+               设备数量:
            </div>
            <div class="aui-list-item-input">
-               <input type="text" placeholder="" id='kksl' style="color:white" >
+               <input type="text" placeholder="" id='sbsl' style="color:white" >
            </div>
        </div>
    </li>
@@ -65,10 +76,13 @@
    <li class="aui-list-item">
         <div class="aui-list-item-inner">
             <div class="aui-list-item-label" style="color:white">
-                设备型号
+                设备型号:
             </div>
             <div class="aui-list-item-input">
-                <input type="text" placeholder="" id='sbxh' style="color:white" >
+                <select id='typeselect' style="color:white" >
+                    <!-- <option v-for='item in items' :value='item.cellid' selected="selected" v-if='item.cellid==cellid'>{{item.cellname}}</option> -->
+                     <option v-for='item in types' :value='item.typeid'>{{item.typename}}</option>
+                </select>
             </div>
         </div>
     </li>
@@ -76,12 +90,12 @@
     <li class="aui-list-item">
          <div class="aui-list-item-inner">
              <div class="aui-list-item-label" style="color:white">
-                 所属分组
+                 所属分组:
              </div>
              <div class="aui-list-item-input">
-                 <select id='cellselect' style="color:white" >
-                     <option v-for='item in items' :value='item.cellid' selected="selected" v-if='item.cellid==cellid'>{{item.cellname}}</option>
-                      <option v-for='item in items' :value='item.cellid'  v-if='item.cellid!=cellid'>{{item.cellname}}</option>
+                 <select id='groupselect' style="color:white" >
+                     <!-- <option v-for='item in items' :value='item.cellid' selected="selected" >{{item.cellname}}</option> -->
+                      <option v-for='item in groups' :value='item.groupid'>{{item.groupname}}</option>
                  </select>
              </div>
          </div>
@@ -94,67 +108,124 @@
 </body>
 <script type="text/javascript" src="../../script/api.js"></script>
 <script type="text/javascript">
-     var type='CCB--102A'
+    var groups=[];
+    var types=[];
     apiready = function() {
         $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
         $api.fixStatusBar($api.dom('header'));
 
+        var app = new Vue({
+          el: '#app',
+          data: {
+            groups: groups,
+            types:types,
+          }
+        })
+        getData()
     }
+
+    function getData(){
+      //获取分组信息
+      api.ajax({
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'devicedata/groupList',
+          method: 'get',
+            }, function(ret, err) {
+                if (ret) {
+                    //  console.log(JSON.stringify(ret));
+                    //设置选择框中楼层
+                    for(var i=0;i<ret.items.length;i++){
+                     obj={}
+                     obj.groupname=ret.items[i].name;
+                     obj.groupid=ret.items[i].id;
+                     groups.push(obj)
+                    }
+                } else {
+                  console.log(JSON.stringify(err));
+                }
+            })
+
+            api.ajax({
+                headers:{"Authorization":$api.getStorage('token')},
+                url: $api.getStorage('url')+'devicedata/typeList',
+                method: 'get',
+                  }, function(ret, err) {
+                      if (ret) {
+                          //  console.log(JSON.stringify(ret));
+                          //设置选择框中楼层
+                          for(var i=0;i<ret.items.length;i++){
+                           obj={}
+                           obj.typename=ret.items[i].name;
+                           obj.typeid=ret.items[i].id;
+                           types.push(obj)
+                          }
+                      } else {
+                        console.log(JSON.stringify(err));
+                      }
+                  })
+    }
+
     function save(){
         if(sn.value==''){
           api.toast({
-              msg: '请输入设备网关号',
+              msg: '请输入设备编码',
               duration: 2000,
               location: 'bottom'
           });
         }
-        else if(kksl.value==''){
+        else if(devicename.value==''){
           api.toast({
-              msg: '请输入空开数量',
+              msg: '请输设备名称',
               duration: 2000,
               location: 'bottom'
           });
         }
-        else if(sbxh.value==''){
+        else if(sbsl.value==''){
           api.toast({
-              msg: '请输入设备型号',
+              msg: '请输入设备数量',
               duration: 2000,
               location: 'bottom'
           });
         }
         else{
-          type=sbxh.value;
-          console.log($api.getStorage('url')+'equsall/?equNumber='+sn.value+'&lenth='+kksl.value+'&type='+type+'&userid='+$api.getStorage('userid'));
           api.ajax({
-              url: $api.getStorage('url')+'equsall/?equNumber='+sn.value+'&lenth='+kksl.value+'&type='+type+'&userid='+$api.getStorage('userid'),
-              method: 'get',
-           }, function(ret, err) {
-              if (ret) {
-                // console.log(JSON.stringify(ret));
-                  if(ret.type=='ok'){
+                headers:{"Authorization":$api.getStorage('token')},
+                url: $api.getStorage('url')+'devicedata/deviceSingle/',
+                method: 'post',
+                data: {
+                    values:{
+                      name:devicename.value,
+                      sn:sn.value,
+                      datatag:2,
+                      length:sbsl.value,
+                      group:document.getElementById('groupselect').value,
+                      type:document.getElementById('typeselect').value
+                    }
+
+                }
+            }, function(ret, err) {
+                if (ret) {
+                  console.log(JSON.stringify(ret));
                     api.toast({
-                        msg: '设备添加成功!',
+                        msg: '新增成功',
                         duration: 2000,
                         location: 'bottom'
                     });
                     api.execScript({
-                        name: 'sbgl',
+                        name: 'zgl',
                         script: 'getData()'
                     });
                     setTimeout(back,2000);
-                  }else{
-                    api.toast({
-                        msg: '该设备已被添加过,请更换设备!',
-                        duration: 2000,
-                        location: 'bottom'
-                    });
-
                   }
-
-              } else {
-                   console.log( JSON.stringify(err));
-              }
-           });
+                 else {
+                   console.log(JSON.stringify(err));
+                  api.toast({
+                      msg: '新增失败',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+                }
+            });
         }
     }
 

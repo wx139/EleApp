@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>AUI快速完成布局</title>
+    <title>楼层管理</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <style type="text/css">
@@ -90,16 +90,18 @@
     }
     function getData(){
       api.ajax({
-          url: $api.getStorage('url')+'cells/?id='+$api.getStorage('userid'),
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'devicedata/buildingList/?page=1&limit=10',
           method: 'get',
       }, function(ret, err) {
           if (ret) {
-            console.log(JSON.stringify(ret));
+            // console.log(JSON.stringify(ret));
               app.items=[]
-              for(var i=0;i<ret.length;i++){
+              console.log(ret.items.length);
+              for(var i=0;i<ret.items.length;i++){
                 var obj={}
-                obj.cellname=ret[i].cellname;
-                obj.cellid=ret[i].id;
+                obj.cellname=ret.items[i].name;
+                obj.cellid=ret.items[i].id;
                 Vue.set(app.items,i,obj)
               }
           } else {

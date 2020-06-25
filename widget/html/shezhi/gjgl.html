@@ -67,9 +67,9 @@
     <div v-for='item in items'>
     <div class="aui-info aui-margin-t-10 aui-padded-l-10 aui-padded-r-10">
     <div class="aui-info-item">
-        <img src="../../image/shebei/Warning.png" style="width:1.5rem" class="aui-img-round" /><span class="aui-margin-l-5" style="color:white">{{item.nickname}}:{{item.warninfo}}</span>
+        <img src="../../image/shebei/Warning.png" style="width:1.5rem" class="aui-img-round" /><span class="aui-margin-l-5" style="color:white">{{item.device.name}}:{{item.warnType.warnname}}</span>
         </div>
-        <div class="aui-info-item" style="color:white">{{item.time}}</div>
+        <div class="aui-info-item" style="color:white">{{item.addtime}}</div>
     </div>
   </div>
   </div>
@@ -161,20 +161,24 @@
     }
 
     function getData(){
+      console.log($api.getStorage('url')+'warndata/warnDataList/?page=1&limit=50&start='+sttime+'&end='+etime);
       api.ajax({
-          url: $api.getStorage('url')+'getwarn/?userid='+$api.getStorage('userid')+'&pageNumber=0&pageSize=1000&fromtime='+sttime+'&totime='+etime,
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'warndata/warnDataList/?page=1&limit=100&start='+sttime+'&end='+etime,
           method: 'get',
       }, function(ret, err) {
           if (ret) {
               console.log(JSON.stringify(ret));
-              app.items=[]
-              for(var i=0;i<ret.length;i++){
-                var obj={};
-                data=ret[0]
-                obj.nickname=data;
-                Vue.set(app.items,i,obj)
-                // console.log(JSON.stringify(app.items));
-              }
+              // app.items=[]
+              // for(var i=0;i<ret.items.length;i++){
+              //   var obj={};
+              //   console.log(JSON.stringify(ret.items[i]));
+              //   obj.nickname=ret.items[i]['device']['name'];
+              //   obj.warninfo=ret.items[i]['warnType']['warnname']
+              //   Vue.set(app.items,i,obj)
+              //   // console.log(JSON.stringify(app.items));
+              // }
+              app.items=ret.items
           } else {
               console.log(JSON.stringify(err));
           }

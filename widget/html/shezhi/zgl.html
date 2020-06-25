@@ -88,17 +88,19 @@
     }
     function getData(){
     api.ajax({
-        url: $api.getStorage('url')+'groups/?id='+$api.getStorage('userid'),
+        headers:{"Authorization":$api.getStorage('token')},
+        url: $api.getStorage('url')+'devicedata/groupList/?page=1&limit=100',
         method: 'get',
     }, function(ret, err) {
         if (ret) {
           console.log(JSON.stringify(ret));
             app.items=[]
-            for(var i=0;i<ret.length;i++){
+            for(var i=0;i<ret.items.length;i++){
               var obj={};
-              obj.groupname=ret[i].groupname;
-              obj.groupid=ret[i].id;
-              obj.cellid=ret[i].cellid;
+              obj.groupname=ret.items[i].name;
+              obj.groupid=ret.items[i].id;
+              console.log(ret.items[i].building);
+              obj.cellid=ret.items[i].building.id;
               Vue.set(app.items,i,obj)
             }
         } else {

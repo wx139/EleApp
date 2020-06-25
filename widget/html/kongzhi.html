@@ -38,10 +38,10 @@
     var UIListView;
     var groupdata=[];
     var timer;
+    var celldata=[];
     apiready = function() {
         $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
         $api.fixStatusBar( $api.dom('header') );
-
         UIListView = api.require('UIListView');
         UIListView.open({
             rect: {
@@ -88,27 +88,27 @@
               });
             }
         });
-        // changegroup()
+        changegroup()
     }
     function changegroup(){
       // groupdata=[];
       api.ajax({
-          url: $api.getStorage('url')+'kongzhi/?id='+$api.getStorage('userid'),
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'devicedata/groupList/?page=1&limit=10',
           method: 'get',
           data: {}
       }, function(ret, err) {
           if (ret) {
             // console.log(JSON.stringify(ret));
             groupdata=[];
-            for (var i = 0; i < ret.length; i++) {
+            for (var i = 0; i < ret.items.length; i++) {
               var obj={}
               // obj.imgPath=ret[i].img;
-              obj.title=ret[i].groupname;
-              obj.remark='在线'+ret[i].online+'/'+ret[i].allnum;
-              obj.uid=ret[i].id
+              obj.title=ret.items[i].name;
+              obj.remark='在线'+ret.items[i].online+'/'+ret.items[i].device_total;
+              obj.uid=ret.items[i].id
               groupdata.push(obj)
             }
-            console.log(JSON.stringify(groupdata));
             UIListView.reloadData({
                   data:groupdata
             });

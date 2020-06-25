@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>AUI快速完成布局</title>
+    <title>设备管理</title>
     <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <style type="text/css">
@@ -54,7 +54,7 @@
                  <i class="aui-iconfont aui-icon-plus" style="color:white"></i>
              </div>
               <div class="aui-list-item-inner"  onclick='newwg()'>
-                  <div class="aui-list-item-title" style="color:white">新增网关</div>
+                  <div class="aui-list-item-title" style="color:white">新增设备</div>
               </div>
           </li>
       </ul>
@@ -68,8 +68,6 @@
     apiready = function() {
         $api.attr($api.byId('bg'),'src','../'+$api.getStorage('bg'))
         $api.fixStatusBar($api.dom('header'));
-
-
         v_shebei = new Vue({
          el: '#shebei',
          data: {

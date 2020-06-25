@@ -44,10 +44,10 @@
       <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div class="aui-list-item-label" style="color:white">
-                  手机号码
+                  邮箱编号
               </div>
               <div class="aui-list-item-input">
-                  <input type="text" placeholder="" id='sjhm' style="color:white" disabled="true" v-model='items.phoneNumber'>
+                  <input type="text" placeholder="" id='sjhm' style="color:white" disabled="true" v-model='items.email'>
               </div>
           </div>
       </li>
@@ -57,7 +57,7 @@
                   个人昵称
               </div>
               <div class="aui-list-item-input">
-                  <input type="text" placeholder="" id='grnc' style="color:white" v-model='items.userName'>
+                  <input type="text" placeholder="" id='grnc' style="color:white" v-model='items.username'>
               </div>
           </div>
       </li>
@@ -85,12 +85,13 @@
       function getData(){
 
         api.ajax({
-        url: $api.getStorage('url')+'user/'+$api.getStorage('userid'),
+        headers:{"Authorization":$api.getStorage('token')},
+        url: $api.getStorage('url')+'user/info',
               method: 'get',
           }, function(ret, err) {
               if (ret) {
                 console.log(JSON.stringify(ret));
-                app.items=ret
+                app.items=ret.data
 
               } else {
                 console.log(JSON.stringify(err));

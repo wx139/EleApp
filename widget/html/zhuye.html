@@ -9,47 +9,47 @@
     <!-- <link rel="stylesheet" type="text/css" href="../css/aui.css" /> -->
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <!--Import Google Icon Font-->
-     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-     <!--Import materialize.css-->
-     <link type="text/css" rel="stylesheet" href="../css/materialize.min.css"  media="screen,projection"/>
-     <link type="text/css" rel="stylesheet" href="../css/percircle.css"/>
-      <link rel="stylesheet" type="text/css" href="../css/aui.css" />
-     <style type="text/css">
-     #bg{
-          position: fixed;
-          right: 0px;
-          bottom: 0px;
-          min-width: 100%;
-          min-height: 100%;
-          height: auto;
-          width: auto;
-          z-index: -99999;
-          /*加滤镜*/
-          /*-webkit-filter: grayscale(100%);*/
-          /*filter:grayscale(100%);*/
-      }
-     </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="../css/materialize.min.css" media="screen,projection" />
+    <link type="text/css" rel="stylesheet" href="../css/percircle.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        #bg {
+            position: fixed;
+            right: 0px;
+            bottom: 0px;
+            min-width: 100%;
+            min-height: 100%;
+            height: auto;
+            width: auto;
+            z-index: -99999;
+            /*加滤镜*/
+            /*-webkit-filter: grayscale(100%);*/
+            /*filter:grayscale(100%);*/
+        }
+    </style>
 </head>
 
 <body>
-  <img src="../image/bj2.jpg" alt="" id='bg'>
-  <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
-      <div class="aui-title" id='title'>设备概况</div>
-      <a class="aui-pull-right aui-btn aui-btn-outlined dropdown-button" id="addkk"  data-activates='dropdown1'>
-          <span class="aui-iconfont aui-icon-search"  ></span>
-      </a>
-      <ul id='dropdown1' class='dropdown-content'>
-        <li><a onclick="scaner()" tapmode="">扫一扫</a></li>
-        <li class="divider"></li>
-        <li><a onclick="addsn()" tapmode="">手动添加</a></li>
-      </ul>
-      <a class="aui-pull-right aui-btn aui-btn-outlined" id="showCell" onclick="showCell()" style="display:none">
-          <span class="aui-iconfont aui-icon-menu"></span>
-      </a>
-      <a class="aui-pull-right aui-btn " id="1" >
+    <img src="../image/bj2.jpg" alt="" id='bg'>
+    <header id="head" class="aui-bar aui-bar-nav" style="background-color:rgba(0,0,0,0);position:fixed">
+        <div class="aui-title" id='title'>设备概况</div>
+        <a class="aui-pull-right aui-btn aui-btn-outlined dropdown-button" id="addkk" data-activates='dropdown1'>
+            <span class="aui-iconfont aui-icon-search"></span>
+        </a>
+        <ul id='dropdown1' class='dropdown-content'>
+            <li><a onclick="scaner()" tapmode="">扫一扫</a></li>
+            <li class="divider"></li>
+            <li><a onclick="addsn()" tapmode="">手动添加</a></li>
+        </ul>
+        <a class="aui-pull-right aui-btn aui-btn-outlined" id="showCell" onclick="showCell()" style="display:none">
+            <span class="aui-iconfont aui-icon-menu"></span>
+        </a>
+        <a class="aui-pull-right aui-btn " id="1">
 
-      </a>
-  </header>
+        </a>
+    </header>
     <div id="allmap" style="width: 0;height: 0; display: none;"></div>
     <!-- <img src="../image/zhuye/znjj.jpg" alt="" width="100%" height="200px"> -->
     <div style="width:100%;height:250px;position: relative;text-align:center; no-repeat;background-size:100%;margin-top:50px">
@@ -78,85 +78,88 @@
 
     <table class="centered white-text" id='app'>
         <thead>
-          <tr>
-              <th data-field="id">名称</th>
-              <th data-field="name">单位</th>
-              <th data-field="price">数值</th>
-          </tr>
+            <tr>
+                <th data-field="id">名称</th>
+                <th data-field="name">单位</th>
+                <th data-field="price">数值</th>
+            </tr>
         </thead>
 
         <tbody>
-          <tr>
-            <td>当前实时负荷</td>
-            <td>W</td>
-            <td>{{item.tPower}}</td>
-          </tr>
-          <tr>
-            <td>设备总数</td>
-            <td>个</td>
-            <td>{{item.devicetotal_count}}</td>
-          </tr>
-          <tr>
-            <td>设备在线数</td>
-            <td>个</td>
-            <td>{{item.deviceonline_count}}</td>
-          </tr>
-          <tr>
-            <td>告警总次数</td>
-            <td>次</td>
-            <td>{{item.warn_count}}</td>
-          </tr>
-          <tr>
-            <td>今日用电量</td>
-            <td>度</td>
-            <td>{{item.ele}}</td>
-          </tr>
+            <tr>
+                <td>当前实时负荷</td>
+                <td>W</td>
+                <td>{{item.tPower}}</td>
+            </tr>
+            <tr>
+                <td>设备总数</td>
+                <td>个</td>
+                <td>{{item.devicetotal_count}}</td>
+            </tr>
+            <tr>
+                <td>设备在线数</td>
+                <td>个</td>
+                <td>{{item.deviceonline_count}}</td>
+            </tr>
+            <tr>
+                <td>告警总次数</td>
+                <td>次</td>
+                <td>{{item.warn_count}}</td>
+            </tr>
+            <tr>
+                <td>今日用电量</td>
+                <td>度</td>
+                <td>{{item.ele}}</td>
+            </tr>
 
-          <!-- <tr>
+            <!-- <tr>
             <td>本周电费</td>
             <td>¥</td>
             <td>{{item.week_eleFee}}</td>
           </tr> -->
-          <!-- <tr>
+            <!-- <tr>
             <td>当前负载率</td>
             <td></td>
             <td>低</td>
           </tr> -->
-          <!-- <tr>
+            <!-- <tr>
             <td>节能情况</td>
             <td></td>
             <td>良好</td>
           </tr> -->
         </tbody>
-      </table>
+    </table>
 
 
 </body>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=gGwQlSIqtQy4wDrCiUH4Tcjj07YgjgjS"></script>
-<script type = "text/javascript" src = "../script/api.js" ></script>
+<script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="../script/materialize.min.js"></script>
 
 <script type="text/javascript">
-    var app;
-    var timer;
+    var app; //app变量
+    var timer; //
     apiready = function() {
-      $api.fixStatusBar( $api.dom('header') );
-      $api.attr($api.byId('bg'),'src',$api.getStorage('bg'))
-      app = new Vue({
-      el: '#app',
-        data: {
-          item:{
-            'tPower':0,
-            'devicetotal_count':0,
-            'deviceonline_count':0,
-            'warn_count':0,
-            'ele':0,
-            'week_eleFee':0,
-          }
-        }
-      })
-      getData()
+        // 导航栏设置
+        $api.fixStatusBar($api.dom('header'));
+        // 背景设置
+        $api.attr($api.byId('bg'), 'src', $api.getStorage('bg'))
+            // Vue初始化
+        app = new Vue({
+                el: '#app',
+                data: {
+                    item: {
+                        'tPower': 0,
+                        'devicetotal_count': 0,
+                        'deviceonline_count': 0,
+                        'warn_count': 0,
+                        'ele': 0,
+                    }
+                }
+            })
+        // 获取数据
+        getData()
 
         //获取用户当前位置
         function getLocation() {
@@ -176,7 +179,7 @@
                     if (ret.status) {
                         onSuccess(ret)
                     } else {
-                      //  alert(err.code);
+                        //  alert(err.code);
                     }
                 });
 
@@ -200,19 +203,19 @@
             gc.getLocation(point, function(rs) {
                 var addComp = rs.addressComponents;
                 api.ajax({
-                    url: 'http://wthrcdn.etouch.cn/weather_mini?city='+addComp.district,
+                    url: 'http://wthrcdn.etouch.cn/weather_mini?city=' + addComp.district,
                     method: 'get',
                     data: {}
                 }, function(ret, err) {
                     if (ret) {
-                      // console.log(JSON.stringify(ret));
-                        var data=ret.data.forecast[0];
-                        $api.html($api.byId('ssd'),ret.data.wendu+'℃');
-                        $api.html($api.byId('address'),addComp.district);
-                        $api.html($api.byId('high'),data.high);
-                        $api.html($api.byId('low'),data.low);
-                        $api.html($api.byId('fengxiang'),data.fengxiang);
-                        $api.html($api.byId('type'),data.type);
+                        // console.log(JSON.stringify(ret));
+                        var data = ret.data.forecast[0];
+                        $api.html($api.byId('ssd'), ret.data.wendu + '℃');
+                        $api.html($api.byId('address'), addComp.district);
+                        $api.html($api.byId('high'), data.high);
+                        $api.html($api.byId('low'), data.low);
+                        $api.html($api.byId('fengxiang'), data.fengxiang);
+                        $api.html($api.byId('type'), data.type);
 
                     } else {
                         // console.log(JSON.stringify(err));
@@ -241,158 +244,164 @@
         }
 
         //出发位置获取方法
-        // getLocation();
+        getLocation();
 
         //扫描仪监听
         api.addEventListener({
             name: 'scaner'
         }, function(ret, err) {
-          var FNScanner = api.require('FNScanner');
-          FNScanner.openScanner({
-            autorotation: true
-          }, function(ret, err) {
-            if (ret) {
-               if(ret.eventType=='success')
-               {
-                   data=eval('(' + ret.content + ')')
-                   if(data.sn==undefined||data.sn=='')
-                   {
-                     return;
-                   }
-                   sn=data.sn;
-                   type=data.ver;
-                  api.prompt({
-                      title:'请输入空开数目',
-                      text:'0',
-                      type:'number',
-                      buttons: ['确定', '取消']
-                  }, function(ret, err){
-                      if( ret ){
-                        console.log(JSON.stringify(ret));
-                           if(ret.buttonIndex==1){
-                             api.ajax({
-                                 url: $api.getStorage('url')+'equsall/?equNumber='+sn+'&lenth='+ret.text+'&type='+type+'&userid='+$api.getStorage('userid'),
-                                 method: 'get',
-                              }, function(ret, err) {
-                                 if (ret) {
-                                   console.log(JSON.stringify(ret));
-                                     if(ret.type=='ok'){
-                                       api.toast({
-                                           msg: '设备添加成功!',
-                                           duration: 2000,
-                                           location: 'bottom'
-                                       });
-                                     }else{
-                                       api.toast({
-                                           msg: '该设备已被添加过,请更换设备!',
-                                           duration: 2000,
-                                           location: 'bottom'
-                                       });
+            var FNScanner = api.require('FNScanner');
+            FNScanner.openScanner({
+                autorotation: true
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.eventType == 'success') {
+                        data = eval('(' + ret.content + ')')
+                        console.log(data);
+                        if (data.sn == undefined || data.sn == '') {
+                            return;
+                        }
+                        sn = data.sn;
+                        type = data.ver;
+                        api.prompt({
+                            title: '请输入空开数目',
+                            text: '0',
+                            type: 'number',
+                            buttons: ['确定', '取消']
+                        }, function(ret, err) {
+                            if (ret) {
+                                // console.log(JSON.stringify(ret));
+                                if (ret.buttonIndex == 1) {
+                                    api.ajax({
+                                        url: $api.getStorage('url') + 'equsall/?equNumber=' + sn + '&lenth=' + ret.text + '&type=' + type + '&userid=' + $api.getStorage('userid'),
+                                        method: 'get',
+                                    }, function(ret, err) {
+                                        if (ret) {
+                                            //  console.log(JSON.stringify(ret));
+                                            if (ret.type == 'ok') {
+                                                api.toast({
+                                                    msg: '设备添加成功!',
+                                                    duration: 2000,
+                                                    location: 'bottom'
+                                                });
+                                            } else {
+                                                api.toast({
+                                                    msg: '该设备已被添加过,请更换设备!',
+                                                    duration: 2000,
+                                                    location: 'bottom'
+                                                });
 
-                                     }
+                                            }
 
-                                 } else {
-                                      console.log( JSON.stringify(err));
-                                 }
-                              });
+                                        } else {
+                                            console.log(JSON.stringify(err));
+                                        }
+                                    });
 
 
-                           }
-                      }else{
-                           console.log( JSON.stringify(err));
-                      }
-                  });
+                                }
+                            } else {
+                                console.log(JSON.stringify(err));
+                            }
+                        });
 
-               }
-            } else {
-              console.log( JSON.stringify(err));返回错误信息
-            }
-          });
+                    }
+                } else {
+                    console.log(JSON.stringify(err));
+                }
+            });
         });
 
     }
-    function getData()
-    {
-      api.ajax({
-          headers:{"Authorization":$api.getStorage('token')},
-          url: $api.getStorage('url')+'analysisdata/totaldata/',
-          method: 'get',
-          data: {}
-      }, function(ret, err) {
-          if (ret) {
-            console.log(JSON.stringify(ret.items['power']));
-              // data=ret
-              app.item.tPower=ret.items['power'].toFixed(2)
-              // app.item=data;
 
-          } else {
-              console.log(JSON.stringify(err));
-          }
-      });
-      api.ajax({
-          headers:{"Authorization":$api.getStorage('token')},
-          url: $api.getStorage('url')+'analysisdata/devicedata/',
-          method: 'get',
-          data: {}
-      }, function(ret, err) {
-          if (ret) {
-            console.log(JSON.stringify(ret.items['devicetotal_count']));
-              // data=ret
-              app.item.devicetotal_count=ret.items['devicetotal_count']
-              app.item.deviceonline_count=ret.items['deviceonline_count']
-              // app.item=data;
+    //初始化数据获取
+    function getData() {
+        //获取功率数据
+        api.ajax({
+            headers: {
+                "Authorization": $api.getStorage('token')
+            },
+            url: $api.getStorage('url') + 'analysisdata/totaldata/',
+            method: 'get',
+            data: {}
+        }, function(ret, err) {
+            if (ret) {
+                app.item.tPower = ret.items['power'].toFixed(2)
 
-          } else {
-              console.log(JSON.stringify(err));
-          }
-      });
-      api.ajax({
-          headers:{"Authorization":$api.getStorage('token')},
-          url: $api.getStorage('url')+'analysisdata/totalwarn/',
-          method: 'get',
-          data: {}
-      }, function(ret, err) {
-          if (ret) {
-            console.log(JSON.stringify(ret.items['count']));
-              // data=ret
-              app.item.warn_count=ret.items['count']
-              // app.item=data;
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+        //获取所有设备的数量数据
+        api.ajax({
+            headers: {
+                "Authorization": $api.getStorage('token')
+            },
+            url: $api.getStorage('url') + 'analysisdata/devicedata/',
+            method: 'get',
+            data: {}
+        }, function(ret, err) {
+            if (ret) {
+                // data=ret
+                app.item.devicetotal_count = ret.items['devicetotal_count']
+                app.item.deviceonline_count = ret.items['deviceonline_count']
+                    // app.item=data;
 
-          } else {
-              console.log(JSON.stringify(err));
-          }
-      });
-      api.ajax({
-          headers:{"Authorization":$api.getStorage('token')},
-          url: $api.getStorage('url')+'analysisdata/eleList_30/',
-          method: 'get',
-          data: {}
-      }, function(ret, err) {
-          if (ret) {
-            console.log(JSON.stringify(ret.items[0]));
-              // data=ret
-              app.item.ele=ret.items[ret.items.length-1]['ele'].toFixed(2)
-              // app.item=data;
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+        //获取告警数据
+        api.ajax({
+            headers: {
+                "Authorization": $api.getStorage('token')
+            },
+            url: $api.getStorage('url') + 'analysisdata/totalwarn/',
+            method: 'get',
+            data: {}
+        }, function(ret, err) {
+            if (ret) {
+                // data=ret
+                app.item.warn_count = ret.items['count']
+                    // app.item=data;
 
-          } else {
-              console.log(JSON.stringify(err));
-          }
-      });
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+        //获取电量使用情况
+        api.ajax({
+            headers: {
+                "Authorization": $api.getStorage('token')
+            },
+            url: $api.getStorage('url') + 'analysisdata/eleList_30/',
+            method: 'get',
+            data: {}
+        }, function(ret, err) {
+            if (ret) {
+                // data=ret
+                app.item.ele = ret.items[ret.items.length - 1]['ele'].toFixed(2)
+                    // app.item=data;
+
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
     }
 
-      //扫描的方法
-    function scaner(){
-      api.sendEvent({
-      name: 'scaner',
-      });
+    //扫描的方法
+    function scaner() {
+        api.sendEvent({
+            name: 'scaner',
+        });
     }
 
-
-    function addsn(){
-      api.openWin({
-          name: 'xzwg',
-          url: 'shezhi/xzwg.html',
-      });
+    // 新增设备
+    function addsn() {
+        api.openWin({
+            name: 'xzwg',
+            url: 'shezhi/xzwg.html',
+        });
     }
 </script>
 
