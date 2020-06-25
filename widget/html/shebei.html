@@ -172,7 +172,12 @@
                     for(var i=0;i<ret.items.length;i++){
                     cellArr.push(ret.items[i].name)
                     cellidArr.push(ret.items[i].id)
-                    ret.items[i].power=ret.items[i].power['power'].toFixed(2)
+                    if (ret.items[i].power['power']!=null){
+                      ret.items[i].power=ret.items[i].power['power'].toFixed(2)
+                    }else{
+                      ret.items[i].power=0
+                    }
+
                     }
                     cells_data=ret.items
                     mobileSelect.updateWheel(0,cellArr)

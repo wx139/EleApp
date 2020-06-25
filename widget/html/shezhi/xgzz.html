@@ -42,16 +42,6 @@
   </header>
     <ul class="aui-list aui-list-in" id='app' style="margin-top:80px;background-color:rgba(0,0,0,0)">
       <li class="aui-list-item">
-           <div class="aui-list-item-inner">
-               <div class="aui-list-item-label" style="color:white">
-                   楼层图片
-               </div>
-               <div class="aui-list-item-input" onclick="ajaxPic()">
-                 <img style='width:90px;height:70px' v-bind:src="cimg" />
-               </div>
-           </div>
-       </li>
-      <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div class="aui-list-item-label" style="color:white">
                   配电箱名称
@@ -101,6 +91,7 @@
 
         if(api.pageParam.groupid){
           groupinfo=api.pageParam;
+          console.log(groupinfo.groupid)
         }
         else {
           groupinfo={}
@@ -114,7 +105,6 @@
           data: {
             items: cells,
             cellid:groupinfo.cellid,
-            cimg:cellimg
           }
         })
 
@@ -123,16 +113,16 @@
 
         //获取楼层信息
         api.ajax({
-            url: $api.getStorage('url')+'cells/?id='+$api.getStorage('userid'),
+            headers:{"Authorization":$api.getStorage('token')},
+            url: $api.getStorage('url')+'devicedata/buildingList/',
             method: 'get',
               }, function(ret, err) {
                   if (ret) {
-                       console.log(JSON.stringify(ret));
                       //设置选择框中楼层
-                      for(var i=0;i<ret.length;i++){
+                      for(var i=0;i<ret.items.length;i++){
                        obj={}
-                       obj.cellname=ret[i].cellname;
-                       obj.cellid=ret[i].id;
+                       obj.cellname=ret.items[i].name;
+                       obj.cellid=ret.items[i].id;
                        cells.push(obj)
                       }
                       pdxmc.value=groupinfo.groupname;
@@ -156,7 +146,6 @@
     }
 
     function edit(){
-        console.log();
         if(pdxmc.value==''){
           api.toast({
               msg: '请输入配电箱名称',
@@ -165,22 +154,20 @@
           });
         }
         else{
-          console.log(document.getElementById('cellselect').value);
           api.ajax({
-                url: $api.getStorage('url')+'groupsedit/',
-                method: 'post',
+                headers:{"Authorization":$api.getStorage('token')},
+                url: $api.getStorage('url')+'devicedata/groupSingle/',
+                method: 'put',
                 data: {
                     values:{
-                      groupid:groupinfo.groupid,
-                      groupname:pdxmc.value,
-                      userid:$api.getStorage('userid'),
-                      cellid:document.getElementById('cellselect').value
+                      id:
+                      name:pdxmc.value,
+                      buildingid:Number(document.getElementById('cellselect').value)
                     }
 
                 }
             }, function(ret, err) {
                 if (ret) {
-                  console.log(JSON.stringify(ret));
                     api.toast({
                         msg: '修改成功',
                         duration: 2000,
@@ -206,11 +193,18 @@
 
     function deletegroup(){
       api.ajax({
-            url: $api.getStorage('url')+'groupsedit/?groupid='+groupinfo.groupid,
-            method: 'get',
+            headers:{"Authorization":$api.getStorage('token')},
+
+            url: $api.getStorage('url')+'devicedata/groupSingle/',
+            method: 'delete',
+            data: {
+                values:{
+                  id:groupinfo.groupid,
+                }
+
+            }
         }, function(ret, err) {
             if (ret) {
-              console.log(JSON.stringify(ret));
               var tag=ret.data;
               if(tag=='1'){
                 api.toast({
@@ -262,8 +256,6 @@ function ajaxPic() {
                                 quality : 100
                         }, function(ret, err) {
                                 if (ret && ret.data) {
-                                      console.log(JSON.stringify(ret.data));
-                                      app.cimg=JSON.stringify(ret.data);
                                       console.log(app.cimg);
                                 } else {
                                         alert('你没有选择图片')

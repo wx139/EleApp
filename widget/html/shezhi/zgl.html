@@ -93,13 +93,11 @@
         method: 'get',
     }, function(ret, err) {
         if (ret) {
-          console.log(JSON.stringify(ret));
             app.items=[]
             for(var i=0;i<ret.items.length;i++){
               var obj={};
               obj.groupname=ret.items[i].name;
               obj.groupid=ret.items[i].id;
-              console.log(ret.items[i].building);
               obj.cellid=ret.items[i].building.id;
               Vue.set(app.items,i,obj)
             }
