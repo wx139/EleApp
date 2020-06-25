@@ -188,6 +188,8 @@
           });
         }
         else{
+          console.log(document.getElementById('typeselect').value);
+          console.log(sn.value);
           api.ajax({
                 headers:{"Authorization":$api.getStorage('token')},
                 url: $api.getStorage('url')+'devicedata/deviceSingle/',
@@ -197,9 +199,9 @@
                       name:devicename.value,
                       sn:sn.value,
                       datatag:2,
-                      length:sbsl.value,
-                      group:document.getElementById('groupselect').value,
-                      type:document.getElementById('typeselect').value
+                      length:Number(sbsl.value),
+                      group:Number(document.getElementById('groupselect').value),
+                      type:Number(document.getElementById('typeselect').value)
                     }
 
                 }

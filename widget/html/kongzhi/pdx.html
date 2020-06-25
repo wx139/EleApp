@@ -46,8 +46,8 @@
     <ul class="aui-list aui-list-in" id='group' style="background-color:rgba(0,0,0,0)">
         <li class="aui-list-item" v-for='item in items' >
             <div class="aui-list-item-label-icon">
-                <div v-if='item.online' style="width:20px">
-                  <i style="color:green" v-if='item.state'>ON</i>
+                <div v-if='item.online==1' style="width:20px">
+                  <i style="color:green" v-if='item.state==1'>ON</i>
                   <i style="color:red" v-else>OFF</i>
                 </div>
                 <div style="width:20px" v-else>
@@ -119,8 +119,7 @@
                 name: 'dskz',
                 url: 'dskz.html',
                 pageParam: {
-                    equNumber:item.equNumber,
-                    number:item.number,
+                    id:item.id,
                     name:item.name,
                 }
             });
@@ -137,8 +136,15 @@
           },
           hezha:function(item){
             api.ajax({
-              url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch=open',
-                method: 'get',
+              headers:{"Authorization":$api.getStorage('token')},
+              url: $api.getStorage('url')+'senddata/control/',
+                method: 'post',
+                data: {
+                    values:{
+                      switch:'1',
+                      deviceids:item.id
+                    }
+                }
             },
             function(ret, err) {
                 if (ret) {
@@ -162,8 +168,15 @@
           },
           fenzha:function(item){
             api.ajax({
-              url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch=close',
-                method: 'get',
+              headers:{"Authorization":$api.getStorage('token')},
+              url: $api.getStorage('url')+'senddata/control/',
+                method: 'post',
+                data: {
+                    values:{
+                      switch:'0',
+                      deviceids:item.id
+                    }
+                }
             },
             function(ret, err) {
                 if (ret) {
@@ -191,11 +204,7 @@
         getData()
     }
     function getData(){
-      api.showProgress({
-          title: '努力加载中...',
-          text: '先喝杯茶...',
-          modal: false
-      });
+
       if(groupid!=-1){
       askurl= $api.getStorage('url')+'devicedata/deviceList/?page=1&limit=100&group='+groupid
       }

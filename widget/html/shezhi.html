@@ -62,14 +62,14 @@
 
     <section class="aui-content">
         <ul class="aui-list aui-list-in aui-margin-b-15" style="background-color:rgba(0,0,0,0)">
-            <li class="aui-list-item">
+            <!-- <li class="aui-list-item">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-location aui-text-wanring"></i>
                 </div>
                 <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWinHtml('sbgl','sbgl')" tapmode="">
                     <div class="aui-list-item-title _white" >设备管理</div>
                 </div>
-            </li>
+            </li> -->
             <li class="aui-list-item ">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-like aui-text-success"></i>
@@ -164,7 +164,6 @@
         }, function(ret, err) {
             var obj={}
             if (ret) {
-              console.log(JSON.stringify(ret.data));
               obj.emailNumber=ret.data.email;
               obj.userName=ret.data.username;
               // console.log(JSON.stringify(ret));

@@ -160,9 +160,9 @@
                 method: 'put',
                 data: {
                     values:{
-                      id:
+                      id:groupinfo.groupid,
                       name:pdxmc.value,
-                      buildingid:Number(document.getElementById('cellselect').value)
+                      building:Number(document.getElementById('cellselect').value)
                     }
 
                 }
@@ -194,19 +194,12 @@
     function deletegroup(){
       api.ajax({
             headers:{"Authorization":$api.getStorage('token')},
-
-            url: $api.getStorage('url')+'devicedata/groupSingle/',
+            url: $api.getStorage('url')+'devicedata/groupSingle/?groupid='+groupinfo.groupid,
             method: 'delete',
-            data: {
-                values:{
-                  id:groupinfo.groupid,
-                }
-
-            }
         }, function(ret, err) {
             if (ret) {
-              var tag=ret.data;
-              if(tag=='1'){
+              var status=ret.status;
+              if(status=='201'){
                 api.toast({
                     msg: '配电箱下有设备，不可删除',
                     duration: 2000,

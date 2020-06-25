@@ -15048,29 +15048,17 @@
     function deletecell(){
       console.log(cellinfo.id);
       api.ajax({
-            headers:{"Authorization":$api.getStorage('token')},
-            url: $api.getStorage('url')+'devicedata/buildingSingle/',
+            headers:{"Authorization":$api.getStorage('token'),'Content-Type':'application/json'},
+            url: $api.getStorage('url')+'devicedata/buildingSingle/?buildingid='+cellinfo.id,
             method: 'delete',
-            data: {
-                values:{
-                  buildingid:cellinfo.id,
-                }
-
-            }
+            dataType: 'json',
         }, function(ret, err) {
             if (ret) {
               console.log(JSON.stringify(ret));
-              var tag=ret.data;
-              if(tag=='1'){
+              var status=ret.status;
+              if(status=='201'){
                 api.toast({
                     msg: '楼层下有分组，不可删除',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-              }
-              else if(tag=='2'){
-                api.toast({
-                    msg: '默认楼层不可删除',
                     duration: 2000,
                     location: 'bottom'
                 });

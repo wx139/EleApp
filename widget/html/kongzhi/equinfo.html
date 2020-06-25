@@ -69,13 +69,13 @@
                 <div class="aui-list-item-title">状态</div>
             </div>
             <p>
-                <div class="aui-btn aui-btn-success" v-if="item.status==true">在线</div>
+                <div class="aui-btn aui-btn-success" v-if="item.online==1">在线</div>
                 <div class="aui-btn aui-btn-success" v-else>离线</div>
             </p>
 
-            <div class="aui-list-item-right" v-if='item.online==true'>
+            <!-- <div class="aui-list-item-right" v-if='item.online==1'>
                 <input type="checkbox" class="aui-switch"  v-on:click='kg(state)' v-model='state.kgstate'>
-            </div>
+            </div> -->
         </div>
       </li>
       <!-- <li class="aui-list-item" >
@@ -171,7 +171,6 @@
         };
         var state={
           kgstate:false,
-          jnstate:true,
         }
         var group = new Vue({
           el: '#equid',
@@ -188,25 +187,31 @@
 
                 if(api.systemType=='android'){
                   namestate='合闸'
-                  state='open';
+                  state='1';
                 }else {
                   namestate='分闸'
-                  state='close';
+                  state='0';
                 }
               }else{
 
                 if(api.systemType=='android'){
                   namestate='分闸'
-                  state='close';
+                  state='0';
                 }else {
                   namestate='合闸'
-                  state='open'
+                  state='1'
                 }
               }
               api.ajax({
-                  url: $api.getStorage('url')+'switchequ/?equNumber='+item.equNumber+'&number='+item.number+'&switch='+state,
-                  method: 'get',
-
+                headers:{"Authorization":$api.getStorage('token')},
+                  url: $api.getStorage('url')+'senddata/control/',
+                  method: 'post',
+                  data: {
+                      values:{
+                        switch:state,
+                        deviceids:id
+                      }
+                  }
               }, function(ret, err) {
                   if (ret) {
                     console.log(JSON.stringify(ret));

@@ -53,7 +53,7 @@
                   <div class="aui-list-item-title">是否开启</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.k1'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.k1'>
                   <!-- <input type="checkbox" class="aui-switch" v-else> -->
               </div>
           </div>
@@ -70,7 +70,7 @@
                   <div class="aui-list-item-title">是否开启</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.g1' id='guan1'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.g1' id='guan1'>
               </div>
           </div>
       </li>
@@ -148,7 +148,7 @@
                   <div class="aui-list-item-title">是否开启</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.k2'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.k2'>
               </div>
           </div>
       </li>
@@ -164,7 +164,7 @@
                   <div class="aui-list-item-title">是否开启</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.g2'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.g2'>
               </div>
           </div>
       </li>
@@ -231,8 +231,8 @@
           </div>
       </li>
     </ul>
-    <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
-      <li class="aui-list-item">
+    <!-- <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)"> -->
+      <!-- <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div style="width:30%">
                   <div class="aui-list-item-title">已用电量:</div>
@@ -243,8 +243,8 @@
               </div>
 
           </div>
-      </li>
-      <li class="aui-list-item">
+      </li> -->
+      <!-- <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div style="width:30%">
                   <div class="aui-list-item-title">剩余电量:</div>
@@ -255,8 +255,8 @@
               </div>
 
           </div>
-      </li>
-      <li class="aui-list-item">
+      </li> -->
+      <!-- <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div style="width:30%">
                   <div class="aui-list-item-title">预交电费:</div>
@@ -267,8 +267,8 @@
               </div>
 
           </div>
-      </li>
-      <li class="aui-list-item">
+      </li> -->
+      <!-- <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div style="width:30%">
                   <div class="aui-list-item-title">电费价格:</div>
@@ -279,18 +279,18 @@
               </div>
 
           </div>
-      </li>
-      <li class="aui-list-item">
+      </li> -->
+      <!-- <li class="aui-list-item">
           <div class="aui-list-item-inner">
               <div style="width:100px">
                   <div class="aui-list-item-title">预交费开关</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.yjf'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.yjf'>
               </div>
           </div>
-      </li>
-    </ul>
+      </li> -->
+    <!-- </ul> -->
     <ul class="aui-list aui-list-in" style="margin-top:80px;background-color:rgba(0,0,0,0)">
       <li class="aui-list-item">
           <div class="aui-list-item-inner">
@@ -314,7 +314,7 @@
                   <span style="color:white">（A）</span>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.kz1'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.kz1'>
               </div>
           </div>
       </li>
@@ -327,7 +327,7 @@
                   <div class="aui-list-item-title">过电压保护:</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.gdybh'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.gdybh'>
               </div>
           </div>
           <div class="aui-list-item-inner">
@@ -335,7 +335,7 @@
                   <div class="aui-list-item-title">低电压保护:</div>
               </div>
               <div class="aui-list-item-right">
-                  <input type="checkbox" class="aui-switch" v-model='items.fz0_1.ddybh'>
+                  <input type="checkbox" class="aui-switch" v-model='items.fz_01.ddybh'>
               </div>
           </div>
       </li>
@@ -400,7 +400,7 @@
        "glys1": 0,
        "glys2": 0,
        "yjf": 0,
-       "fz0_1": {
+       "fz_01": {
            "gdybh":false,
            "ddybh":false,
            "k1": false,
@@ -417,8 +417,7 @@
        "yydl":"0",
        "sydl":"0"
    }
-    var equNumber;
-    var number;
+    var id;
     var name;
     var time1=[]
     var time2=[]
@@ -466,14 +465,12 @@
 
 
         $api.fixStatusBar($api.dom('header'));
-        if(api.pageParam.equNumber){
-          equNumber=api.pageParam.equNumber
-          number=api.pageParam.number
+        if(api.pageParam.id){
+          id=api.pageParam.id
           name=api.pageParam.name
         }
         else {
-          equNumber=-1
-          number=-1
+          id=-1
         }
         app = new Vue({
          el: '#app',
@@ -488,16 +485,17 @@
 
     function getData(){
               api.ajax({
-                  url: $api.getStorage('url')+'get4info/?equNumber='+equNumber+'&number='+number,
+                  headers:{"Authorization":$api.getStorage('token')},
+                  url: $api.getStorage('url')+'senddata/params/?deviceid='+id,
                   method: 'get',
               }, function(ret, err) {
                   if (ret) {
-                      console.log(JSON.stringify(ret));
-                      if(ret.data=='1'){
+                      // console.log(JSON.stringify(ret));
+                      if(ret.code==0){
                         setTimeout(getData,1000)
                       }else {
-                        app.items=ret;
-                        data=ret
+                        app.items=ret.data;
+                        data=ret.data
                       }
 
                   } else {
@@ -508,16 +506,14 @@
 
 
     function save(){
+      app.items.id=id;
       console.log(JSON.stringify(app.items));
       api.ajax({
-          url: $api.getStorage('url')+'set4info/',
+          headers:{"Authorization":$api.getStorage('token')},
+          url: $api.getStorage('url')+'senddata/params/',
           method: 'post',
           data:{
-            values:{
-              data:JSON.stringify(app.items),
-              equNumber:equNumber,
-              number:number
-            }
+            values:app.items
           }
       }, function(ret, err) {
           if (ret) {
@@ -528,10 +524,10 @@
                   duration: 2000,
                   location: 'bottom'
               });
-              api.execScript({
-                  name: 'lcgl',
-                  script: 'getData()'
-              });
+              // api.execScript({
+              //     name: 'lcgl',
+              //     script: 'getData()'
+              // });
               setTimeout(back,2000);
 
           } else {

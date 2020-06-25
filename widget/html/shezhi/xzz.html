@@ -89,15 +89,15 @@
         })
 
         api.ajax({
-            url: $api.getStorage('url')+'cells/?id='+$api.getStorage('userid'),
+            headers:{"Authorization":$api.getStorage('token')},
+            url: $api.getStorage('url')+'devicedata/buildingList/',
             method: 'get',
               }, function(ret, err) {
                   if (ret) {
-                    console.log(JSON.stringify(ret));
-                      for(var i=0;i<ret.length;i++){
+                      for(var i=0;i<ret.items.length;i++){
                        obj={}
-                       obj.cellname=ret[i].cellname;
-                       obj.cellid=ret[i].id;
+                       obj.cellname=ret.items[i].name;
+                       obj.cellid=ret.items[i].id;
                        cells.push(obj)
                       }
                   } else {
@@ -127,18 +127,14 @@
           });
         }
         else{
-
-
-
           api.ajax({
-                url: $api.getStorage('url')+'groups/?id='+$api.getStorage('userid'),
+            headers:{"Authorization":$api.getStorage('token')},
+                url: $api.getStorage('url')+'devicedata/groupSingle/',
                 method: 'post',
                 data: {
                     values:{
-                      groupname:pdxmc.value,
-                      img:'cells_img/20180429195745.png',
-                      userid:$api.getStorage('userid'),
-                      cellid:cellid
+                      name:pdxmc.value,
+                      building:Number(cellid)
                     }
 
                 }
